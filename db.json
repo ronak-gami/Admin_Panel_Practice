@@ -1,0 +1,93 @@
+{
+  "users": [
+    {
+      "firstName": "Admin",
+      "lastName": "admin",
+      "email": "admin@gmail.com",
+      "password": "Admin@123",
+      "id": 100,
+      "role": "admin"
+    },
+    {
+      "firstName": "Ronak",
+      "lastName": "Gami",
+      "email": "ronak@gmail.com",
+      "password": "Test@123",
+      "id": 1,
+      "role": "user"
+    },
+    {
+      "firstName": "jeel",
+      "lastName": "gosai",
+      "email": "jeel@gmail.com",
+      "password": "Test@123",
+      "id": 2,
+      "role": "user"
+    },
+    {
+      "firstName": "ronak",
+      "lastName": "kapdi",
+      "email": "ronak@gmail.com",
+      "password": "Test@123",
+      "id": 101,
+      "role": "user"
+    }
+  ],
+  "tasks": [
+    {
+      "priority": "Medium",
+      "dueDate": "1968-08-24T18:30:00.000Z",
+      "description": "ujn. fp;nhw ' ",
+      "title": "ronak",
+      "status": "approved",
+      "createdAt": "2025-06-11T07:48:08.111Z",
+      "user_id": 1,
+      "id": 1
+    },
+    {
+      "title": "fgf",
+      "description": "wefg",
+      "priority": "Medium",
+      "status": "approved",
+      "createdAt": "2025-06-11T08:26:10.511Z",
+      "user_id": 2,
+      "id": 2
+    },
+    {
+      "title": "12345",
+      "description": "qwefg",
+      "priority": "Low",
+      "status": "approved",
+      "createdAt": "2025-06-11T08:53:33.653Z",
+      "user_id": 2,
+      "id": 3
+    },
+    {
+      "title": "2ewergfthg",
+      "description": "qwegrfthju",
+      "priority": "High",
+      "status": "rejected",
+      "createdAt": "2025-06-11T08:53:39.993Z",
+      "user_id": 2,
+      "id": 4
+    },
+    {
+      "title": "qqwdefrdgf",
+      "description": "wdgrfth",
+      "priority": "Medium",
+      "status": "rejected",
+      "createdAt": "2025-06-11T08:54:22.922Z",
+      "user_id": 1,
+      "id": 5
+    },
+    {
+      "title": "wegrfthg",
+      "description": "w2gth",
+      "priority": "Medium",
+      "status": "approved",
+      "createdAt": "2025-06-11T08:54:28.951Z",
+      "user_id": 1,
+      "id": 6
+    }
+  ]
+}
