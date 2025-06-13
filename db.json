@@ -31,6 +31,14 @@
       "password": "Test@12345",
       "id": 101,
       "role": "user"
+    },
+    {
+      "firstName": "rudra",
+      "lastName": "sojitra",
+      "email": "rudra@gmail.com",
+      "password": "Test@123",
+      "id": 102,
+      "role": "user"
     }
   ],
   "tasks": [

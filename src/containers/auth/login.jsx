@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Container, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  InputAdornment,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { loginValidationSchema } from "../../utils/helper";
@@ -106,19 +113,23 @@ const Login = () => {
             <Stack gap={2}>
               <FormGroup
                 {...{
+                  fullWidth: true,
                   label: "Email",
                   name: "email",
                   register,
                   error: errors["email"],
                   placeholder: "Enter your email",
-                  type: "email",
+                  type: "text",
                   startAdornment: (
-                    <MailOutlineIcon sx={{ color: COLORS.NEUTRAL.dark }} />
+                    <InputAdornment position="start">
+                      <MailOutlineIcon />
+                    </InputAdornment>
                   ),
                 }}
               />
               <FormGroup
                 {...{
+                  fullWidth: true,
                   label: "Password",
                   name: "password",
                   register,
@@ -126,7 +137,9 @@ const Login = () => {
                   placeholder: "Enter your password",
                   type: "password",
                   startAdornment: (
-                    <LockOutlinedIcon sx={{ color: COLORS.NEUTRAL.dark }} />
+                    <InputAdornment position="start">
+                      <LockOutlinedIcon />
+                    </InputAdornment>
                   ),
                 }}
               />

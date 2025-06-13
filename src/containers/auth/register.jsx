@@ -129,9 +129,7 @@ const Register = () => {
                   error: errors["email"],
                   placeholder: "Enter your email",
                   type: "email",
-                  startAdornment: (
-                    <MailOutlineIcon sx={{ color: COLORS.NEUTRAL.light }} />
-                  ),
+                  startAdornment: <MailOutlineIcon color="inherit" />,
                 }}
               />
               <FormGroup
@@ -142,9 +140,7 @@ const Register = () => {
                   error: errors["password"],
                   placeholder: "Enter your password",
                   type: "password",
-                  startAdornment: (
-                    <LockOutlinedIcon sx={{ color: COLORS.NEUTRAL.light }} />
-                  ),
+                  startAdornment: <LockOutlinedIcon color="inherit" />,
                 }}
               />
               <FormGroup
@@ -155,9 +151,7 @@ const Register = () => {
                   error: errors["confirmPassword"],
                   placeholder: "Enter your confirm password",
                   type: "password",
-                  startAdornment: (
-                    <LockOutlinedIcon sx={{ color: COLORS.NEUTRAL.light }} />
-                  ),
+                  startAdornment: <LockOutlinedIcon color="inherit" />,
                 }}
               />
               <Button

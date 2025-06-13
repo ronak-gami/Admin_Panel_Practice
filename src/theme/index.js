@@ -69,7 +69,6 @@ const theme = createTheme({
         fullWidth: true,
       },
     },
-
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
@@ -81,15 +80,16 @@ const theme = createTheme({
           "& .MuiOutlinedInput-notchedOutline > legend": {
             display: "none",
           },
+          "&.MuiInputBase-adornedStart": {
+            color: COLORS.NEUTRAL[700],
+          },
+          "&.MuiInputBase-adornedEnd": {
+            color: COLORS.NEUTRAL[700],
+          },
         },
         input: {
           padding: "12px 14px",
-          "&.MuiInputBase-inputAdornedStart": {
-            paddingLeft: "10px !important",
-          },
-          "&.MuiInputBase-inputAdornedEnd": {
-            paddingRight: 0,
-          },
+          color: COLORS.NEUTRAL[700],
         },
         inputMultiline: {
           padding: 0,
@@ -102,15 +102,21 @@ const theme = createTheme({
         root: {
           fontSize: "0.9rem",
           marginBottom: 4,
+          color: COLORS.NEUTRAL[700],
         },
       },
     },
-
     MuiInputAdornment: {
       styleOverrides: {
         root: {
-          marginLeft: 8,
-          marginRight: 8,
+          color: COLORS.NEUTRAL[700],
+        },
+        positionStart: {
+          marginRight: "8px",
+          color: COLORS.NEUTRAL[700],
+        },
+        positionEnd: {
+          marginLeft: "8px",
         },
       },
     },
@@ -118,7 +124,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderBottom: "none",
-          padding: "12px !important",
+          padding: "12px",
         },
       },
     },
@@ -134,7 +140,7 @@ const theme = createTheme({
     MuiDialogActions: {
       styleOverrides: {
         root: {
-          padding: "12px !important",
+          padding: "12px",
         },
       },
     },
