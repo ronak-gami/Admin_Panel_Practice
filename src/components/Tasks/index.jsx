@@ -1,32 +1,32 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
-  Paper,
   Typography,
-  Modal,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Fab,
   TablePagination,
+  Chip,
+  Stack,
 } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, Search as SearchIcon } from "@mui/icons-material";
 import { COLORS } from "../../utils/colors";
 import CustomInput from "../../shared/CustomInput";
 import CustomButton from "../../shared/CustomButton";
-import CustomLoader from "../../shared/CustomLoader";
 import { api } from "../../api";
 import { useSelector } from "react-redux";
 import { taskSchema } from "../../utils/helper";
+import theme from "../../theme";
+import CustomHeader from "../../shared/CustomHeader";
+import CustomTable from "../../shared/custom-table";
+import Form from "../../shared/form";
+import FormGroup from "../../shared/form-group";
+import Button from "../../shared/CustomButton";
+import Select from "../../shared/custom-select";
+import CustomModal from "../../shared/custom-model";
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -44,7 +44,6 @@ const Tasks = () => {
 
   const fetchTasks = useCallback(async () => {
     try {
-      setLoading(true);
       const [tasksResponse, usersResponse] = await Promise.all([
         api.TASKS.get_all(),
         api.USERS.get_all(),
@@ -65,8 +64,6 @@ const Tasks = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
     }
   }, [role, id]);
 
@@ -75,9 +72,7 @@ const Tasks = () => {
   }, [fetchTasks]);
 
   const handleAddTask = async (data) => {
-    console.log("data: ", data);
     try {
-      setLoading(true);
       await api.TASKS.create({
         data: {
           ...data,
@@ -90,8 +85,6 @@ const Tasks = () => {
       handleCloseModal();
     } catch (error) {
       console.error("Error adding task:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -109,243 +102,202 @@ const Tasks = () => {
     setPage(0);
   };
 
-  const handleStatusChange = async (taskId, newStatus) => {
-    try {
-      setLoading(true);
-      const taskToUpdate = tasks.find((task) => task.id === taskId);
-      if (!taskToUpdate) return;
+  const handleStatusChange = useCallback(
+    async (taskId, newStatus) => {
+      try {
+        const taskToUpdate = tasks.find((task) => task.id === taskId);
+        if (!taskToUpdate) return;
 
-      await api.TASKS.update({
-        id: taskId,
-        data: { ...taskToUpdate, status: newStatus },
-      });
-      await fetchTasks();
-    } catch (error) {
-      console.error("Error updating task status:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+        await api.TASKS.update({
+          id: taskId,
+          data: { ...taskToUpdate, status: newStatus },
+        });
+        await fetchTasks();
+      } catch (error) {
+        console.error("Error updating task status:", error);
+      }
+    },
+    [fetchTasks, tasks]
+  );
 
-  if (loading) {
-    return <CustomLoader fullScreen />;
-  }
+  const columns = useMemo(() => {
+    const baseColumns = [
+      { id: "title", label: "Title", field_name: "title" },
+      { id: "description", label: "Description", field_name: "description" },
+      {
+        id: "createdAt",
+        label: "Created date",
+        field_name: "createdAt",
+        render: ({ row }) => new Date(row.createdAt).toLocaleDateString(),
+      },
+      {
+        id: "priority",
+        label: "Priority",
+        field_name: "priority",
+        render: ({ row }) => {
+          const textColor =
+            row.priority === "High"
+              ? COLORS.ERROR[800]
+              : row.priority === "Medium"
+                ? COLORS.WARNING[800]
+                : COLORS.PRIMARY[800];
+
+          const bgColor =
+            row.priority === "High"
+              ? COLORS.ERROR[50]
+              : row.priority === "Medium"
+                ? COLORS.WARNING[100]
+                : COLORS.PRIMARY[50];
+          return (
+            <Chip
+              label={row.priority}
+              sx={{
+                color: textColor,
+                backgroundColor: bgColor,
+              }}
+            />
+          );
+        },
+      },
+      {
+        id: "status",
+        label: "Status",
+        field_name: "status",
+        render: ({ row }) => {
+          const textColor =
+            row.status === "approved"
+              ? COLORS.PRIMARY[800]
+              : row.status === "rejected"
+                ? COLORS.ERROR[800]
+                : COLORS.WARNING[800];
+
+          const bgColor =
+            row.status === "approved"
+              ? COLORS.PRIMARY[50]
+              : row.status === "rejected"
+                ? COLORS.ERROR[50]
+                : COLORS.WARNING[100];
+          return (
+            <Chip
+              label={row.status}
+              sx={{
+                color: textColor,
+                backgroundColor: bgColor,
+              }}
+            />
+          );
+        },
+      },
+    ];
+    if (role === "admin") {
+      return [
+        {
+          id: "username",
+          label: "Username",
+          field_name: "username",
+          render: ({ row }) => users[row.user_id] || "Unknown User",
+        },
+        ...baseColumns,
+        {
+          id: "actions",
+          label: "Actions",
+          field_name: "actions",
+          render: ({ row }) => {
+            if (row.status === "pending") {
+              return (
+                <Stack
+                  sx={{
+                    gap: 1,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CustomButton
+                    size="small"
+                    onClick={() => handleStatusChange(row.id, "approved")}
+                    variant="contained"
+                  >
+                    Approve
+                  </CustomButton>
+                  <CustomButton
+                    size="small"
+                    onClick={() => handleStatusChange(row.id, "rejected")}
+                    variant="outlined"
+                  >
+                    Reject
+                  </CustomButton>
+                </Stack>
+              );
+            } else {
+              return (
+                <Typography variant="body2" color="textSecondary">
+                  {row.status === "approved" ? "Approved" : "Rejected"}
+                </Typography>
+              );
+            }
+          },
+        },
+      ];
+    } else return baseColumns;
+  }, [handleStatusChange, role, users]);
+
+  const priorityOptions = [
+    { value: "High", label: "High" },
+    { value: "Medium", label: "Medium" },
+    { value: "Low", label: "Low" },
+  ];
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <>
+      <CustomHeader />
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 3,
-        }}
+        sx={{ padding: 3, display: "flex", flexDirection: "column", gap: 2 }}
       >
-        <Typography
-          variant="h5"
+        <Box
           sx={{
-            color: COLORS.primary,
-            fontWeight: 600,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          Tasks Management
-        </Typography>
-        {role === "user" && (
-          <Fab
-            color="primary"
-            aria-label="add"
-            onClick={() => setOpenModal(true)}
+          <Typography
+            variant="h5"
             sx={{
-              backgroundColor: COLORS.primary,
-              "&:hover": {
-                backgroundColor: COLORS.primary,
-                opacity: 0.9,
-              },
+              color: theme.palette.primary.main,
+              fontWeight: 600,
             }}
           >
-            <AddIcon />
-          </Fab>
-        )}
-      </Box>
+            Tasks Management
+          </Typography>
+          {role === "user" && (
+            <Fab
+              color="primary"
+              aria-label="add"
+              onClick={() => setOpenModal(true)}
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.main,
+                  opacity: 0.9,
+                },
+              }}
+            >
+              <AddIcon />
+            </Fab>
+          )}
+        </Box>
 
-      <Paper
-        elevation={9}
-        sx={{
-          width: "100%",
-          overflow: "hidden",
-          backgroundColor: COLORS.white,
-          borderRadius: 2,
-        }}
-      >
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="tasks table">
-            <TableHead>
-              <TableRow>
-                {[
-                  ...(role === "admin" ? ["User Name"] : []),
-                  "Title",
-                  "Description",
-                  "Due Date",
-                  "Priority",
-                  "Status",
-                  ...(role === "admin" ? ["Actions"] : []),
-                ].map((header) => (
-                  <TableCell
-                    key={header}
-                    sx={{
-                      backgroundColor: COLORS.secondary,
-                      color: COLORS.darkgray,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {header}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tasks
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((task) => (
-                  <TableRow
-                    key={task.id}
-                    sx={{
-                      backgroundColor:
-                        task.status === "approved"
-                          ? `${COLORS.secondary}80`
-                          : task.status === "rejected"
-                            ? `${COLORS.lightgray}50`
-                            : "transparent",
-                    }}
-                  >
-                    {role === "admin" && (
-                      <TableCell sx={{ color: COLORS.darkgray }}>
-                        {users[task.user_id]}
-                      </TableCell>
-                    )}
-                    <TableCell sx={{ color: COLORS.darkgray }}>
-                      {task.title}
-                    </TableCell>
-                    <TableCell sx={{ color: COLORS.darkgray }}>
-                      {task.description}
-                    </TableCell>
-                    <TableCell sx={{ color: COLORS.darkgray }}>
-                      {new Date(task.dueDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell sx={{ color: COLORS.darkgray }}>
-                      <Box
-                        sx={{
-                          backgroundColor:
-                            task.priority === "High"
-                              ? "#FEE2E2"
-                              : task.priority === "Medium"
-                                ? "#FEF3C7"
-                                : "#DCFCE7",
-                          color:
-                            task.priority === "High"
-                              ? "#991B1B"
-                              : task.priority === "Medium"
-                                ? "#92400E"
-                                : "#166534",
-                          px: 2,
-                          py: 0.5,
-                          borderRadius: 1,
-                          display: "inline-block",
-                          fontSize: "0.875rem",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {task.priority}
-                      </Box>
-                    </TableCell>
-                    <TableCell sx={{ color: COLORS.darkgray }}>
-                      <Box
-                        sx={{
-                          backgroundColor:
-                            task.status === "approved"
-                              ? "#DCFCE7"
-                              : task.status === "rejected"
-                                ? "#FEE2E2"
-                                : "#FEF3C7",
-                          color:
-                            task.status === "approved"
-                              ? "#166534"
-                              : task.status === "rejected"
-                                ? "#991B1B"
-                                : "#92400E",
-                          px: 2,
-                          py: 0.5,
-                          borderRadius: 1,
-                          display: "inline-block",
-                          fontSize: "0.875rem",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {task.status}
-                      </Box>
-                    </TableCell>
-                    {role === "admin" && task.status === "pending" && (
-                      <TableCell>
-                        <Box sx={{ display: "flex", gap: 1 }}>
-                          <CustomButton
-                            size="small"
-                            onClick={() =>
-                              handleStatusChange(task.id, "approved")
-                            }
-                            sx={{
-                              backgroundColor: COLORS.primary,
-                              "&:hover": {
-                                backgroundColor: COLORS.primary,
-                                opacity: 0.9,
-                              },
-                            }}
-                          >
-                            Approve
-                          </CustomButton>
-                          <CustomButton
-                            size="small"
-                            onClick={() =>
-                              handleStatusChange(task.id, "rejected")
-                            }
-                            sx={{
-                              backgroundColor: COLORS.darkgray,
-                              "&:hover": {
-                                backgroundColor: COLORS.darkgray,
-                                opacity: 0.9,
-                              },
-                            }}
-                          >
-                            Reject
-                          </CustomButton>
-                        </Box>
-                      </TableCell>
-                    )}
-                    {role === "admin" && task.status !== "pending" && (
-                      <TableCell>
-                        <Typography variant="body2" color="textSecondary">
-                          {task.status === "approved" ? "Approved" : "Rejected"}
-                        </Typography>
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))}
-              {tasks.length === 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={role === "admin" ? 7 : 5}
-                    align="center"
-                    sx={{
-                      py: 3,
-                      color: COLORS.darkgray,
-                    }}
-                  >
-                    No tasks found
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <CustomInput
+          name="search"
+          register={register}
+          placeholder="Search…"
+          startAdornment={<SearchIcon sx={{ color: COLORS.NEUTRAL.dark }} />}
+          size="small"
+          variant="outlined"
+        />
+
+        <CustomTable columns={columns} data={tasks} tableName="tasks" />
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -355,93 +307,91 @@ const Tasks = () => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           sx={{
-            borderTop: `1px solid ${COLORS.lightgray}`,
             ".MuiTablePagination-select": {
-              color: COLORS.primary,
+              color: theme.palette.primary.main,
             },
           }}
         />
-      </Paper>
 
-      {/* Add Task Modal */}
-      <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        aria-labelledby="add-task-modal"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: COLORS.white,
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <Typography
-            variant="h6"
-            sx={{
-              color: COLORS.primary,
-              fontWeight: 600,
-              mb: 3,
-              textAlign: "center",
-            }}
-          >
-            Add New Task
-          </Typography>
-          <form onSubmit={handleSubmit(handleAddTask)} noValidate>
-            <CustomInput
-              name="title"
-              label="Title"
-              register={register}
-              errors={errors}
-            />
-            <CustomInput
-              name="description"
-              label="Description"
-              register={register}
-              errors={errors}
-              multiline
-              rows={4}
-            />
-            <CustomInput
-              name="priority"
-              register={register}
-              errors={errors}
-              select
-              SelectProps={{ native: true }}
-            >
-              <option value="">Select Priority</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </CustomInput>
-            <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-              <CustomButton
-                onClick={handleCloseModal}
-                fullWidth
-                sx={{
-                  backgroundColor: COLORS.lightgray,
-                  "&:hover": {
-                    backgroundColor: COLORS.lightgray,
-                    opacity: 0.9,
-                  },
-                }}
-              >
+        {/* Add Task Modal */}
+        <CustomModal
+          fullWidth
+          open={openModal}
+          onClose={handleCloseModal}
+          title="Add New Task"
+          actions={
+            <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+              <Button variant="outlined" fullWidth onClick={handleCloseModal}>
                 Cancel
-              </CustomButton>
-              <CustomButton type="submit" loading={loading} fullWidth>
+              </Button>
+              <Button
+                variant="contained"
+                type="submit"
+                form="add-task-form"
+                fullWidth
+              >
                 Add Task
-              </CustomButton>
+              </Button>
             </Box>
-          </form>
-        </Box>
-      </Modal>
-    </Box>
+          }
+        >
+          <Form
+            id="add-task-form"
+            onSubmit={handleSubmit(handleAddTask)}
+            noValidate
+          >
+            <Stack gap={2}>
+              <FormGroup
+                sx={{ width: "100%" }}
+                {...{
+                  fullWidth: true,
+                  label: "Title",
+                  name: "title",
+                  register,
+                  error: errors["title"],
+                  placeholder: "Enter task title",
+                  type: "text",
+                }}
+              />
+              <FormGroup
+                sx={{ width: "100%" }}
+                {...{
+                  fullWidth: true,
+                  label: "Description",
+                  name: "description",
+                  register,
+                  error: errors["description"],
+                  placeholder: "Enter task description",
+                  type: "text",
+                  multiline: true,
+                  rows: 3,
+                }}
+              />
+              <FormGroup
+                sx={{ width: "100%" }}
+                {...{
+                  fullWidth: true,
+                  label: "Priority",
+                  name: "priority",
+                  register,
+                  error: errors["priority"],
+                  select: (
+                    <Select
+                      {...register("priority")}
+                      options={priorityOptions}
+                      error={!!errors["priority"]}
+                      helperText={errors["priority"]?.message}
+                      sx={{ width: "100%" }}
+                      placeholder="Select priority"
+                    />
+                  ),
+                }}
+              />
+            </Stack>
+          </Form>
+        </CustomModal>
+      </Box>
+    </>
   );
 };
 

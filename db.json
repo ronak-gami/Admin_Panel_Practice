@@ -28,7 +28,7 @@
       "firstName": "ronak",
       "lastName": "kapdi",
       "email": "ronak@gmail.com",
-      "password": "Test@123",
+      "password": "Test@12345",
       "id": 101,
       "role": "user"
     }
@@ -36,7 +36,6 @@
   "tasks": [
     {
       "priority": "Medium",
-      "dueDate": "1968-08-24T18:30:00.000Z",
       "description": "ujn. fp;nhw ' ",
       "title": "ronak",
       "status": "approved",
@@ -88,6 +87,72 @@
       "createdAt": "2025-06-11T08:54:28.951Z",
       "user_id": 1,
       "id": 6
+    },
+    {
+      "priority": "Medium",
+      "search": "",
+      "title": "2234t5y6u",
+      "description": "2qwrgfth",
+      "status": "pending",
+      "createdAt": "2025-06-13T06:57:36.777Z",
+      "user_id": 1,
+      "id": 7
+    },
+    {
+      "title": "2eaw3r",
+      "description": "qaexrg",
+      "priority": "High",
+      "status": "pending",
+      "createdAt": "2025-06-13T06:58:19.172Z",
+      "user_id": 1,
+      "id": 8
+    },
+    {
+      "priority": "Low",
+      "search": "",
+      "title": "h ello",
+      "description": "123456789",
+      "status": "pending",
+      "createdAt": "2025-06-13T06:58:53.239Z",
+      "user_id": 1,
+      "id": 9
+    },
+    {
+      "priority": "High",
+      "search": "",
+      "title": "hello",
+      "description": "!234567RDKLM",
+      "status": "pending",
+      "createdAt": "2025-06-13T07:00:28.800Z",
+      "user_id": 101,
+      "id": 10
+    },
+    {
+      "title": "789456123",
+      "description": "zskml;",
+      "priority": "Medium",
+      "status": "pending",
+      "createdAt": "2025-06-13T07:00:39.198Z",
+      "user_id": 101,
+      "id": 11
+    },
+    {
+      "title": "1234567890",
+      "description": "QAftjyhu",
+      "priority": "Low",
+      "status": "pending",
+      "createdAt": "2025-06-13T07:00:50.149Z",
+      "user_id": 101,
+      "id": 12
+    },
+    {
+      "title": "1235",
+      "description": "1234e56u",
+      "priority": "High",
+      "status": "pending",
+      "createdAt": "2025-06-13T07:56:22.030Z",
+      "user_id": 101,
+      "id": 13
     }
   ]
 }

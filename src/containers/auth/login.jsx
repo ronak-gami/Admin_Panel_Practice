@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Container, Paper, Stack, Typography } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import CustomInput from "../../shared/CustomInput";
 import { loginValidationSchema } from "../../utils/helper";
 import Button from "../../shared/CustomButton";
 import { api } from "../../api";
@@ -16,6 +15,7 @@ import { URLS } from "../../constants/urls";
 import { COLORS } from "../../utils/colors";
 import Form from "../../shared/form";
 import FormGroup from "../../shared/form-group";
+import theme from "../../theme";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -93,7 +93,7 @@ const Login = () => {
             sx={{
               fontWeight: 600,
               textAlign: "start",
-              color: COLORS.primary,
+              color: theme.palette.primary.main,
             }}
           >
             Login
@@ -112,7 +112,9 @@ const Login = () => {
                   error: errors["email"],
                   placeholder: "Enter your email",
                   type: "email",
-                  startAdornment: <MailOutlineIcon />,
+                  startAdornment: (
+                    <MailOutlineIcon sx={{ color: COLORS.NEUTRAL.dark }} />
+                  ),
                 }}
               />
               <FormGroup
@@ -123,7 +125,9 @@ const Login = () => {
                   error: errors["password"],
                   placeholder: "Enter your password",
                   type: "password",
-                  startAdornment: <LockOutlinedIcon />,
+                  startAdornment: (
+                    <LockOutlinedIcon sx={{ color: COLORS.NEUTRAL.dark }} />
+                  ),
                 }}
               />
               <Button

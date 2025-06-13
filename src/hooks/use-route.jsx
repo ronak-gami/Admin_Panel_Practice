@@ -68,7 +68,6 @@ const useRoutes = () => {
     [allRoutes]
   );
 
-  console.log("-------------------ROLE-------------------", user?.role);
   const protectedRoutes = useMemo(
     () =>
       allRoutes.filter(

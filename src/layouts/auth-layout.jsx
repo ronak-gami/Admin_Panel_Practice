@@ -8,12 +8,18 @@ const NewOutlet = withAuth(Outlet);
 
 const AuthLayout = () => {
   return (
-    <>
+    <Box sx={{ height: "100vh", overflow: "hidden" }}>
       <CustomHeader />
-      <Box sx={{ backgroundColor: COLORS.background }}>
+      <Box
+        sx={{
+          backgroundColor: COLORS.SECONDARY[50],
+          overflow: "hidden",
+        }}
+      >
         <NewOutlet />
       </Box>
-    </>
+    </Box>
   );
 };
+
 export default AuthLayout;

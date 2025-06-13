@@ -1,22 +1,26 @@
 import { Stack, Typography } from "@mui/material";
 import CustomInput from "../CustomInput";
 
-const FormGroup = ({ label, labelSx = {}, error, errorSx = {}, ...props }) => {
-  console.log("error", error);
-
+const FormGroup = ({
+  label,
+  labelSx = {},
+  error,
+  errorSx = {},
+  sx,
+  select,
+  ...props
+}) => {
   return (
-    <Stack gap={1}>
+    <Stack sx={sx} gap={0.5}>
       {label ? (
         <label style={{ fontWeight: 500, fontSize: 14, ...labelSx }}>
           {label}
         </label>
       ) : null}
-      <CustomInput {...{ error }} {...props} />
-      {error ? (
-        <Typography variant="caption" color="error" sx={{ ...errorSx }}>
-          {error?.message || ""}
-        </Typography>
-      ) : null}
+      {select ? select : <CustomInput {...{ error }} {...props} />}
+      <Typography variant="caption" color="error" sx={{ ...errorSx }}>
+        {error?.message || ""}
+      </Typography>
     </Stack>
   );
 };
