@@ -11,17 +11,16 @@ import {
 } from "@mui/material";
 import { Add as AddIcon, Search as SearchIcon } from "@mui/icons-material";
 import { COLORS } from "../../utils/colors";
-import CustomInput from "../../shared/CustomInput";
-import CustomButton from "../../shared/CustomButton";
+import CustomInput from "../../shared/custom-input";
 import { api } from "../../api";
 import { useSelector } from "react-redux";
 import { taskSchema } from "../../utils/helper";
 import theme from "../../theme";
-import CustomHeader from "../../shared/CustomHeader";
+import CustomHeader from "../../shared/custom-header";
 import CustomTable from "../../shared/custom-table";
 import Form from "../../shared/form";
 import FormGroup from "../../shared/form-group";
-import Button from "../../shared/CustomButton";
+import Button from "../../shared/custom-button";
 import Select from "../../shared/custom-select";
 import CustomModal from "../../shared/custom-model";
 
@@ -233,20 +232,20 @@ const Tasks = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <CustomButton
+                  <Button
                     size="small"
                     onClick={() => handleStatusChange(row.id, "approved")}
                     variant="contained"
                   >
                     Approve
-                  </CustomButton>
-                  <CustomButton
+                  </Button>
+                  <Button
                     size="small"
                     onClick={() => handleStatusChange(row.id, "rejected")}
                     variant="outlined"
                   >
                     Reject
-                  </CustomButton>
+                  </Button>
                 </Stack>
               );
             } else {

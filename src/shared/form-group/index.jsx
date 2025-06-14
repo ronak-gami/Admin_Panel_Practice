@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import CustomInput from "../CustomInput";
+import CustomInput from "../custom-input";
 
 const FormGroup = ({ component, error, errorSx = {}, sx, ...props }) => {
   return (

@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Typography, Box, TablePagination, Button } from "@mui/material";
 import { api } from "../../api";
 import { COLORS } from "../../utils/colors";
-import CustomLoader from "../../shared/CustomLoader";
+import CustomLoader from "../../shared/custom-loader";
 import theme from "../../theme";
-import CustomHeader from "../../shared/CustomHeader";
+import CustomHeader from "../../shared/custom-header";
 import CustomTable from "../../shared/custom-table";
 import { useSelector } from "react-redux";
 

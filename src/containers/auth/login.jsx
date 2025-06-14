@@ -12,14 +12,13 @@ import {
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { loginValidationSchema } from "../../utils/helper";
-import Button from "../../shared/CustomButton";
+import Button from "../../shared/custom-button";
 import { api } from "../../api";
 import { setHeaders } from "../../api/client";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserData, setToken } from "../../redux/slices/auth.slice";
 import { URLS } from "../../constants/urls";
-import { COLORS } from "../../utils/colors";
 import Form from "../../shared/form";
 import FormGroup from "../../shared/form-group";
 import theme from "../../theme";

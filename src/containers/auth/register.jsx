@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Container, Paper, Stack, Typography } from "@mui/material";
-import Button from "../../shared/CustomButton";
+import Button from "../../shared/custom-button";
 import { registerValidationSchema } from "../../utils/helper";
 import { api } from "../../api";
 import { useNavigate } from "react-router-dom";

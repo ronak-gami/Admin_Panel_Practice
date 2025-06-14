@@ -2,7 +2,7 @@ import withAuth from "../hoc/with-auth";
 import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
 import { COLORS } from "../utils/colors";
-import CustomHeader from "../shared/CustomHeader";
+import CustomHeader from "../shared/custom-header";
 
 const NewOutlet = withAuth(Outlet);
 

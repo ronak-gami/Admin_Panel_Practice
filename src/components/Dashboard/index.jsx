@@ -1,4 +1,4 @@
-import CustomHeader from "../../shared/CustomHeader";
+import CustomHeader from "../../shared/custom-header";
 
 const Dashboard = () => {
   return <CustomHeader />;

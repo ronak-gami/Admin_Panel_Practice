@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import Button from "../CustomButton";
+import Button from "../custom-button";
 import { LoginIcon, LogoutIcon, RegisterIcon } from "../../assets/icons";
 import { useNavigate } from "react-router-dom";
 import { URLS } from "../../constants/urls";
