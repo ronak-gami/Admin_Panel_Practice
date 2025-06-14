@@ -1,25 +1,28 @@
-import { Container, Typography, IconButton } from "@mui/material";
-import { COLORS } from "../../utils/colors";
-import { useNavigate } from "react-router-dom";
-import { URLS } from "../../constants/urls";
-import { useDispatch, useSelector } from "react-redux";
-import { clearAuthData } from "../../redux/slices/auth.slice";
-import { useState } from "react";
 import {
+  Box,
+  Container,
+  Typography,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import CustomButton from "../CustomButton";
+import Button from "../CustomButton";
+import { LoginIcon, LogoutIcon, RegisterIcon } from "../../assets/icons";
+import { useNavigate } from "react-router-dom";
+import { URLS } from "../../constants/urls";
+import theme from "../../theme";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { COLORS } from "../../utils/colors";
+import { clearAuthData } from "../../redux/slices/auth.slice";
+import CustomModal from "../custom-model";
 
 const CustomHeader = () => {
-  const dispatch = useDispatch();
-  const userData = useSelector((state) => state.auth.userData);
-  const [openDialog, setOpenDialog] = useState(false);
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleLogoutClick = () => {
     setOpenDialog(true);
@@ -27,8 +30,6 @@ const CustomHeader = () => {
 
   const handleConfirmLogout = () => {
     dispatch(clearAuthData());
-    localStorage.removeItem("token");
-    localStorage.removeItem("userData");
     navigate(URLS.LOGIN);
     setOpenDialog(false);
   };
@@ -38,81 +39,104 @@ const CustomHeader = () => {
   };
 
   return (
-    <>
+    <Box sx={{ width: "100%", backgroundColor: theme.palette.primary.main }}>
       <Container
-        maxWidth={false}
+        maxWidth="xl"
         sx={{
-          height: 50,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          backgroundColor: COLORS.primary,
-          gap: 3,
         }}
       >
-        <IconButton
-          color={COLORS.white}
-          onClick={() => {
-            navigate(URLS.LOGIN);
-          }}
-          sx={[!userData ? { cursor: "pointer" } : {}, { color: COLORS.white }]}
-        >
-          {userData
-            ? `Welcome, ${userData.firstName} ${userData.lastName}`
-            : "Login"}
-        </IconButton>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography
+            color={theme.palette.primary.contrastText}
+            sx={{ fontWeight: 900, fontSize: 30 }}
+          >
+            Insight
+          </Typography>
+          <Typography
+            color={theme.palette.primary.contrastText}
+            sx={{ fontSize: 30 }}
+          >
+            Platform
+          </Typography>
+        </Box>
 
-        <IconButton
-          onClick={userData ? handleLogoutClick : () => navigate(URLS.REGISTER)}
-          sx={{ color: COLORS.white }}
-        >
-          {userData ? <LogoutIcon /> : "Register"}
-        </IconButton>
-      </Container>
+        {token ? (
+          <Button
+            onClick={handleLogoutClick}
+            variant="contained"
+            sx={{
+              gap: 1,
+              "&:hover": {
+                backgroundColor: theme.palette.primary.contrastText,
+                color: theme.palette.primary.main,
+              },
+            }}
+          >
+            <LogoutIcon /> Logout
+          </Button>
+        ) : (
+          <Box gap={2} sx={{ display: "flex", alignItems: "center" }}>
+            <Button
+              onClick={() => {
+                navigate(URLS.LOGIN);
+              }}
+              variant="contained"
+              sx={{
+                gap: 1,
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.contrastText,
+                  color: theme.palette.primary.main,
+                },
+              }}
+            >
+              <LoginIcon /> Login
+            </Button>
 
-      {/* Logout Confirmation Dialog */}
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        PaperProps={{
-          sx: {
-            borderRadius: 2,
-            padding: 1,
-          },
-        }}
-      >
-        <DialogTitle sx={{ color: COLORS.primary }}>Confirm Logout</DialogTitle>
-        <DialogContent>
+            <Button
+              onClick={() => {
+                navigate(URLS.REGISTER);
+              }}
+              variant="contained"
+              sx={{
+                gap: 1,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.contrastText,
+                  color: theme.palette.primary.main,
+                },
+              }}
+            >
+              <RegisterIcon /> Register
+            </Button>
+          </Box>
+        )}
+        <CustomModal
+          open={openDialog}
+          onClose={handleCloseDialog}
+          title="Confirm Logout"
+          titleSx={{ color: theme.palette.primary.main }}
+          actions={
+            <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+              <Button variant="outlined" fullWidth onClick={handleCloseDialog}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={handleConfirmLogout}
+              >
+                Logout
+              </Button>
+            </Box>
+          }
+        >
           <Typography>Are you sure you want to logout?</Typography>
-        </DialogContent>
-        <DialogActions sx={{ padding: 2 }}>
-          <CustomButton
-            onClick={handleCloseDialog}
-            sx={{
-              backgroundColor: COLORS.lightgray,
-              "&:hover": {
-                backgroundColor: COLORS.lightgray,
-                opacity: 0.9,
-              },
-            }}
-          >
-            Cancel
-          </CustomButton>
-          <CustomButton
-            onClick={handleConfirmLogout}
-            sx={{
-              backgroundColor: COLORS.primary,
-              "&:hover": {
-                backgroundColor: COLORS.hover,
-                opacity: 0.9,
-              },
-            }}
-          >
-            Logout
-          </CustomButton>
-        </DialogActions>
-      </Dialog>
-    </>
+        </CustomModal>
+      </Container>
+    </Box>
   );
 };
 

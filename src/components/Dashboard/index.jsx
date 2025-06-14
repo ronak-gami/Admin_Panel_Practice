@@ -1,5 +1,7 @@
+import CustomHeader from "../../shared/CustomHeader";
+
 const Dashboard = () => {
-  return <div>Dashboard</div>;
+  return <CustomHeader />;
 };
 
 export default Dashboard;

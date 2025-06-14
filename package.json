@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "json-server": "json-server --watch db.json --routes routes.json --middlewares ./auth.cjs --port 3000 --cors",
     "start": "concurrently \"npm run dev\" \"npm run json-server\"",
     "build": "vite build",

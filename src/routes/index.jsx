@@ -1,25 +1,20 @@
 import useRoutes from "../hooks/use-route";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import AuthLayout from "../layouts/auth-layout";
 import DashboardLayout from "../layouts/dashboard-layout";
+
 const Routing = () => {
   const { authRoutes, protectedRoutes } = useRoutes();
 
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
       {/* Auth routes */}
       <Route element={<AuthLayout />}>
-        {authRoutes
-          .filter((route) => !route.noLayout)
-          .map(({ id, element, path, ...otherData }) => (
-            <Route
-              index
-              key={id}
-              path={path}
-              element={element}
-              {...otherData}
-            />
-          ))}
+        {authRoutes.map(({ id, ...otherData }) => (
+          <Route index key={id} {...otherData} />
+        ))}
       </Route>
 
       {/* Private routes for user */}

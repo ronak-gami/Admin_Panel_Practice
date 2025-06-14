@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { URLS } from "../../constants/urls";
 import { COLORS } from "../../utils/colors";
 import { forgotPasswordSchema } from "../../utils/helper";
+import theme from "../../theme";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -79,7 +80,7 @@ const ForgotPassword = () => {
               justifyContent: "center",
               alignItems: "center",
               textAlign: "center",
-              color: COLORS.primary,
+              color: theme.palette.primary.main,
               fontWeight: 600,
             }}
           >
@@ -90,7 +91,7 @@ const ForgotPassword = () => {
             sx={{
               textAlign: "center",
               mb: 3,
-              color: COLORS.darkgray,
+              color: COLORS.NEUTRAL.dark,
             }}
           >
             Enter your email address and we'll send you a link to reset your
@@ -112,8 +113,8 @@ const ForgotPassword = () => {
                 <Button
                   variant="outlined"
                   sx={{
-                    color: COLORS.primary,
-                    borderColor: COLORS.primary,
+                    color: theme.palette.primary.main,
+                    borderColor: theme.palette.primary.main,
                     backgroundColor: "transparent",
                   }}
                   size="large"
@@ -128,9 +129,9 @@ const ForgotPassword = () => {
                   sx={{
                     color: "white",
                     fontWeight: 600,
-                    backgroundColor: COLORS.primary,
+                    backgroundColor: theme.palette.primary.main,
                     "&:hover": {
-                      backgroundColor: COLORS.primary,
+                      backgroundColor: theme.palette.primary.main,
                       opacity: 0.9,
                     },
                   }}

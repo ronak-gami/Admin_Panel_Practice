@@ -7,7 +7,7 @@ const NewOutlet = withUser(Outlet);
 
 const PrivateLayout = () => {
   return (
-    <Box sx={{ backgroundColor: COLORS.background }}>
+    <Box sx={{ backgroundColor: COLORS.SECONDARY[50] }}>
       <NewOutlet />
     </Box>
   );

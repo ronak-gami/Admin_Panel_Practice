@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Container, Paper, Typography } from "@mui/material";
-import CustomInput from "../../shared/CustomInput";
+import { Box, Container, Paper, Stack, Typography } from "@mui/material";
 import Button from "../../shared/CustomButton";
 import { registerValidationSchema } from "../../utils/helper";
 import { api } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { URLS } from "../../constants/urls";
+import { COLORS } from "../../utils/colors";
+import Form from "../../shared/form";
+import FormGroup from "../../shared/form-group";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import theme from "../../theme";
+
 const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -41,7 +47,7 @@ const Register = () => {
 
   return (
     <Container
-      disableGutters
+      maxWidth={false}
       sx={{
         justifyContent: "center",
         alignItems: "center",
@@ -54,17 +60,20 @@ const Register = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          width: "100%",
         }}
       >
         <Paper
           elevation={12}
           sx={{
             padding: 4,
-            width: 600,
+            maxWidth: 500,
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
             alignItems: "center",
+            flexDirection: "column",
+            width: "100%",
+            borderRadius: 3,
+            gap: 2,
           }}
         >
           <Typography
@@ -72,70 +81,89 @@ const Register = () => {
             component="h1"
             gutterBottom
             sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
+              fontWeight: 600,
+              textAlign: "start",
+              color: theme.palette.primary.main,
             }}
           >
             Register
           </Typography>
-          <form
-            onSubmit={handleSubmit(handleRegister)}
+          <Form
+            handleSubmit={handleSubmit(handleRegister)}
             noValidate
-            style={{ width: "100%" }}
+            sx={{ width: "100%" }}
           >
-            <Box flexDirection={"column"} gap={1.2} sx={{ display: "flex" }}>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <CustomInput
-                  name="firstname"
-                  label="First Name"
-                  register={register}
-                  errors={errors}
+            <Stack gap={1}>
+              <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+                <FormGroup
+                  sx={{ width: "100%" }}
+                  {...{
+                    fullWidth: true,
+                    label: "First Name",
+                    name: "firstName",
+                    register,
+                    error: errors["firstName"],
+                    placeholder: "Enter your first name",
+                    type: "text",
+                  }}
                 />
-                <CustomInput
-                  name="lastname"
-                  label="Last Name"
-                  register={register}
-                  errors={errors}
+                <FormGroup
+                  sx={{ width: "100%" }}
+                  {...{
+                    fullWidth: true,
+                    label: "Last Name",
+                    name: "lastName",
+                    register,
+                    error: errors["lastName"],
+                    placeholder: "Enter your last name",
+                    type: "text",
+                  }}
                 />
               </Box>
 
-              <CustomInput
-                name="email"
-                label="Email"
-                register={register}
-                errors={errors}
+              <FormGroup
+                {...{
+                  label: "Email",
+                  name: "email",
+                  register,
+                  error: errors["email"],
+                  placeholder: "Enter your email",
+                  type: "email",
+                  startAdornment: <MailOutlineIcon color="inherit" />,
+                }}
               />
-              <CustomInput
-                name="password"
-                label="Password"
-                register={register}
-                errors={errors}
-                password
+              <FormGroup
+                {...{
+                  label: "Password",
+                  name: "password",
+                  register,
+                  error: errors["password"],
+                  placeholder: "Enter your password",
+                  type: "password",
+                  startAdornment: <LockOutlinedIcon color="inherit" />,
+                }}
               />
-              <CustomInput
-                name="confirmPassword"
-                label="Confirm Password"
-                register={register}
-                errors={errors}
-                password
+              <FormGroup
+                {...{
+                  label: "Confirm Password",
+                  name: "confirmPassword",
+                  register,
+                  error: errors["confirmPassword"],
+                  placeholder: "Enter your confirm password",
+                  type: "password",
+                  startAdornment: <LockOutlinedIcon color="inherit" />,
+                }}
               />
               <Button
                 loading={loading}
                 variant="contained"
-                sx={{
-                  color: "white",
-                  fontWeight: 600,
-                  mt: 2,
-                }}
-                size="large"
                 type="submit"
                 fullWidth
               >
                 Register
               </Button>
-            </Box>
-          </form>
+            </Stack>
+          </Form>
         </Paper>
       </Box>
     </Container>

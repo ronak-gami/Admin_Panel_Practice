@@ -1,7 +1,6 @@
 import { useState } from "react";
 import withUser from "../hoc/with-user";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import CustomHeader from "../shared/CustomHeader";
 import {
   Box,
   Drawer,
@@ -11,9 +10,7 @@ import {
   ListItemText,
   ListItemButton,
   IconButton,
-  useTheme,
   useMediaQuery,
-  Divider,
 } from "@mui/material";
 import {
   Dashboard as DashboardIcon,
@@ -26,6 +23,7 @@ import {
 import { COLORS } from "../utils/colors";
 import { URLS } from "../constants/urls";
 import { useSelector } from "react-redux";
+import theme from "../theme";
 
 const drawerWidth = 250;
 const closedDrawerWidth = 65;
@@ -68,7 +66,6 @@ const DashboardLayout = () => {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleDrawerToggle = () => {
@@ -88,10 +85,7 @@ const DashboardLayout = () => {
   const isDrawerOpen = open || isHovered;
 
   return (
-    <>
-      <CustomHeader />
-
-      {/* Mobile Menu Toggle */}
+    <Box sx={{ height: "100vh" }}>
       {isMobile && (
         <IconButton
           color="inherit"
@@ -103,7 +97,7 @@ const DashboardLayout = () => {
             left: 16,
             top: 8,
             zIndex: 1200,
-            color: COLORS.white,
+            color: theme.palette.primary.contrastText,
           }}
         >
           <MenuIcon />
@@ -122,8 +116,6 @@ const DashboardLayout = () => {
           "& .MuiDrawer-paper": {
             width: isDrawerOpen ? drawerWidth : closedDrawerWidth,
             boxSizing: "border-box",
-            backgroundColor: COLORS.secondary,
-            marginTop: "50px",
             overflowX: "hidden",
             transition: theme.transitions.create("width", {
               easing: theme.transitions.easing.sharp,
@@ -159,11 +151,8 @@ const DashboardLayout = () => {
                   px: 2.5,
                   backgroundColor:
                     location.pathname === item.path
-                      ? COLORS.secondary
+                      ? theme.palette.primary[50]
                       : "transparent",
-                  "&:hover": {
-                    backgroundColor: COLORS.hover,
-                  },
                 }}
               >
                 <ListItemIcon
@@ -173,8 +162,8 @@ const DashboardLayout = () => {
                     justifyContent: "center",
                     color:
                       location.pathname === item.path
-                        ? COLORS.primary
-                        : COLORS.darkgray,
+                        ? theme.palette.primary.main
+                        : COLORS.NEUTRAL.dark,
                   }}
                 >
                   {item.icon}
@@ -186,8 +175,8 @@ const DashboardLayout = () => {
                     "& .MuiListItemText-primary": {
                       color:
                         location.pathname === item.path
-                          ? COLORS.primary
-                          : COLORS.darkgray,
+                          ? theme.palette.primary.main
+                          : COLORS.NEUTRAL.dark,
                       fontWeight: location.pathname === item.path ? 600 : 400,
                     },
                   }}
@@ -202,7 +191,6 @@ const DashboardLayout = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          backgroundColor: COLORS.background,
           minHeight: "100vh",
           ml: isMobile ? 0 : `${closedDrawerWidth}px`,
           width: isMobile ? "100%" : `calc(100% - ${closedDrawerWidth}px)`,
@@ -218,7 +206,7 @@ const DashboardLayout = () => {
       >
         <Outlet />
       </Box>
-    </>
+    </Box>
   );
 };
 

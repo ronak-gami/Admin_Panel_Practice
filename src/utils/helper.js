@@ -12,8 +12,8 @@ export const loginValidationSchema = yup.object().shape({
 });
 
 export const registerValidationSchema = yup.object().shape({
-  firstname: yup.string().required("First name is required"),
-  lastname: yup.string().required("Last name is required"),
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
   email: yup
     .string()
     .email("Must be a valid email")
@@ -31,6 +31,7 @@ export const registerValidationSchema = yup.object().shape({
 export const taskSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
+  priority: yup.string().required("Priority is required"),
 });
 
 export const forgotPasswordSchema = yup.object().shape({

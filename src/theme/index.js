@@ -1,10 +1,23 @@
 import { createTheme } from "@mui/material";
-import { primary, secondary } from "../utils/colors";
+import { COLORS } from "../utils/colors";
 
-export default createTheme({
+const theme = createTheme({
   palette: {
-    primary,
-    secondary,
+    primary: COLORS.PRIMARY,
+    secondary: COLORS.SECONDARY,
+    error: COLORS.ERROR,
+    warning: COLORS.WARNING,
+    neutral: COLORS.NEUTRAL,
+    accent: COLORS.ACCENT,
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
   },
   components: {
     MuiButton: {
@@ -22,32 +35,30 @@ export default createTheme({
           boxShadow: "none",
         },
         containedPrimary: {
-          backgroundColor: primary.main,
-          color: primary.contrastText,
+          backgroundColor: COLORS.PRIMARY.main,
+          color: COLORS.PRIMARY.contrastText,
           "&:hover": {
-            backgroundColor: primary.dark,
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
+            backgroundColor: COLORS.PRIMARY.dark,
           },
         },
         containedSecondary: {
-          backgroundColor: secondary.main,
-          color: secondary.contrastText,
+          backgroundColor: COLORS.SECONDARY.main,
+          color: COLORS.SECONDARY.contrastText,
           "&:hover": {
-            backgroundColor: secondary.dark,
+            backgroundColor: COLORS.SECONDARY.dark,
           },
         },
         outlined: {
-          borderColor: primary.main,
-          color: primary.main,
+          borderColor: COLORS.PRIMARY.main,
+          color: COLORS.PRIMARY.main,
           "&:hover": {
-            borderColor: primary.dark,
-            backgroundColor: "rgba(4, 100, 100, 0.04)",
+            borderColor: COLORS.PRIMARY.dark,
           },
         },
         text: {
-          color: primary.main,
+          color: COLORS.PRIMARY.main,
           "&:hover": {
-            backgroundColor: "rgba(4, 100, 100, 0.04)",
+            backgroundColor: "rgba(23, 184, 166, 0.04)",
           },
         },
       },
@@ -64,40 +75,76 @@ export default createTheme({
           fontSize: "0.95rem",
           borderRadius: 8,
           "& .MuiOutlinedInput-notchedOutline": {
-            top: 0, // 🔥 This sets the fieldset top to 0
+            top: 0,
           },
           "& .MuiOutlinedInput-notchedOutline > legend": {
             display: "none",
           },
+          "&.MuiInputBase-adornedStart": {
+            color: COLORS.NEUTRAL[700],
+          },
+          "&.MuiInputBase-adornedEnd": {
+            color: COLORS.NEUTRAL[700],
+          },
         },
         input: {
           padding: "12px 14px",
-          // Adjust padding if adornments exist
-          "&.MuiInputBase-inputAdornedStart": {
-            paddingLeft: 10,
-          },
-          "&.MuiInputBase-inputAdornedEnd": {
-            paddingRight: 0,
-          },
+          color: COLORS.NEUTRAL[700],
+        },
+        inputMultiline: {
+          padding: 0,
         },
       },
     },
+
     MuiInputLabel: {
       styleOverrides: {
         root: {
           fontSize: "0.9rem",
           marginBottom: 4,
+          color: COLORS.NEUTRAL[700],
         },
       },
     },
     MuiInputAdornment: {
       styleOverrides: {
         root: {
-          marginLeft: 8,
-          marginRight: 8,
-          color: "#999",
+          color: COLORS.NEUTRAL[700],
+        },
+        positionStart: {
+          marginRight: "8px",
+          color: COLORS.NEUTRAL[700],
+        },
+        positionEnd: {
+          marginLeft: "8px",
+        },
+      },
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          borderBottom: "none",
+          padding: "12px",
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          borderTop: "none",
+          borderBottom: "none",
+          padding: "12px",
+        },
+      },
+    },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: {
+          padding: "12px",
         },
       },
     },
   },
 });
+
+export default theme;

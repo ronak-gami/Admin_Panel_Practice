@@ -4,7 +4,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { COLORS } from "../../utils/colors";
 
 const CustomInput = ({
   name,
@@ -25,6 +24,7 @@ const CustomInput = ({
       {...register(name)}
       {...props}
       error={!!error}
+      type={props.type === "password" && !showPassword ? "password" : "text"}
       InputProps={{
         startAdornment,
         endAdornment:
