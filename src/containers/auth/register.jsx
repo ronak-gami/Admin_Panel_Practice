@@ -7,7 +7,6 @@ import { registerValidationSchema } from "../../utils/helper";
 import { api } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { URLS } from "../../constants/urls";
-import { COLORS } from "../../utils/colors";
 import Form from "../../shared/form";
 import FormGroup from "../../shared/form-group";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -98,7 +97,6 @@ const Register = () => {
                 <FormGroup
                   sx={{ width: "100%" }}
                   {...{
-                    fullWidth: true,
                     label: "First Name",
                     name: "firstName",
                     register,
@@ -110,7 +108,6 @@ const Register = () => {
                 <FormGroup
                   sx={{ width: "100%" }}
                   {...{
-                    fullWidth: true,
                     label: "Last Name",
                     name: "lastName",
                     register,
@@ -154,12 +151,7 @@ const Register = () => {
                   startAdornment: <LockOutlinedIcon color="inherit" />,
                 }}
               />
-              <Button
-                loading={loading}
-                variant="contained"
-                type="submit"
-                fullWidth
-              >
+              <Button loading={loading} variant="contained" type="submit">
                 Register
               </Button>
             </Stack>

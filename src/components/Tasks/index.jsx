@@ -27,6 +27,8 @@ import CustomModal from "../../shared/custom-model";
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -70,6 +72,24 @@ const Tasks = () => {
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredTasks({});
+      return;
+    }
+
+    const matches = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const resultObject = matches.reduce((acc, task) => {
+      acc[task.id] = task;
+      return acc;
+    }, {});
+
+    setFilteredTasks(resultObject);
+  }, [searchTerm, tasks]);
 
   const handleAddTask = async (data) => {
     try {
@@ -291,13 +311,18 @@ const Tasks = () => {
         <CustomInput
           name="search"
           register={register}
+          onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search…"
           startAdornment={<SearchIcon sx={{ color: COLORS.NEUTRAL.dark }} />}
           size="small"
           variant="outlined"
         />
 
-        <CustomTable columns={columns} data={tasks} tableName="tasks" />
+        <CustomTable
+          columns={columns}
+          data={searchTerm ? Object.values(filteredTasks) : tasks}
+          tableName="tasks"
+        />
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -368,24 +393,19 @@ const Tasks = () => {
                 }}
               />
               <FormGroup
+                name="priority"
+                error={errors["priority"]}
                 sx={{ width: "100%" }}
-                {...{
-                  fullWidth: true,
-                  label: "Priority",
-                  name: "priority",
-                  register,
-                  error: errors["priority"],
-                  select: (
-                    <Select
-                      {...register("priority")}
-                      options={priorityOptions}
-                      error={!!errors["priority"]}
-                      helperText={errors["priority"]?.message}
-                      sx={{ width: "100%" }}
-                      placeholder="Select priority"
-                    />
-                  ),
-                }}
+                component={
+                  <Select
+                    {...register("priority")}
+                    options={priorityOptions}
+                    error={!!errors["priority"]}
+                    helperText={errors["priority"]?.message}
+                    placeholder="Select priority"
+                    label="Priority"
+                  />
+                }
               />
             </Stack>
           </Form>

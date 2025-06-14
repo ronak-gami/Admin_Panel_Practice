@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { COLORS } from "../../utils/colors";
 
 const CustomModal = ({
   onClose,
@@ -32,7 +33,9 @@ const CustomModal = ({
             ...titleSx,
           }}
         >
-          <Typography variant="h6">{title}</Typography>
+          <Typography variant="h6" color={COLORS.PRIMARY.main}>
+            {title}
+          </Typography>
           {showCloseIcon && (
             <IconButton
               aria-label="close"
