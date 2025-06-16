@@ -5,11 +5,32 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
 } from "@mui/material";
+import * as React from "react";
 import { COLORS } from "../../utils/colors";
 import theme from "../../theme";
+import { getComparator } from "../../utils/helper";
 
-const CustomTable = ({ columns, data, tableName }) => {
+const CustomTable = ({
+  columns,
+  data,
+  tableName,
+  order,
+  orderBy,
+  onRequestSort,
+}) => {
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  const sortedData = React.useMemo(() => {
+    if (order && orderBy) {
+      return [...data].sort(getComparator(order, orderBy));
+    }
+    return data;
+  }, [order, orderBy, data]);
+
   return (
     <TableContainer
       sx={{ borderRadius: 1, border: `1px solid ${COLORS.NEUTRAL[400]}` }}
@@ -20,6 +41,7 @@ const CustomTable = ({ columns, data, tableName }) => {
             {columns.map((col) => (
               <TableCell
                 key={col.id}
+                sortDirection={orderBy === col.id ? order : false}
                 sx={{
                   backgroundColor: theme.palette.primary[50],
                   color: COLORS.NEUTRAL[900],
@@ -27,18 +49,25 @@ const CustomTable = ({ columns, data, tableName }) => {
                   fontWeight: 600,
                 }}
               >
-                {col.label}
+                <TableSortLabel
+                  active={orderBy === col.id}
+                  direction={orderBy === col.id ? order : "asc"}
+                  onClick={createSortHandler(col.id)}
+                >
+                  {col.label}
+                </TableSortLabel>
               </TableCell>
             ))}
           </TableRow>
         </TableHead>
+
         <TableBody>
-          {data.length <= 0 ? (
+          {sortedData.length <= 0 ? (
             <TableRow>
               <TableCell colSpan={columns.length}>No data found.</TableCell>
             </TableRow>
           ) : (
-            data.map((row, rowIndex) => (
+            sortedData.map((row, rowIndex) => (
               <TableRow
                 key={row.id}
                 sx={{
@@ -56,8 +85,6 @@ const CustomTable = ({ columns, data, tableName }) => {
                     sx={{
                       color: COLORS.NEUTRAL.dark,
                       textAlign: "center",
-                      display: "",
-                      gap: 1,
                     }}
                   >
                     {col.render

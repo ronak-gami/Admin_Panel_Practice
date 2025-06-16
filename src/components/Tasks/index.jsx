@@ -1,20 +1,29 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Typography,
   Fab,
-  TablePagination,
-  Chip,
   Stack,
+  Menu,
+  MenuItem,
+  ListItemText,
+  IconButton,
+  Pagination,
+  Popover,
+  FormControl,
+  FormLabel,
+  FormControlLabel,
+  Divider,
+  Checkbox,
+  FormGroup as MuiFormGroup,
 } from "@mui/material";
-import { Add as AddIcon, Search as SearchIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  Search as SearchIcon,
+  FilterListAlt as FilterIcon,
+} from "@mui/icons-material";
+import { useTasks } from "./useTasks";
 import { COLORS } from "../../utils/colors";
 import CustomInput from "../../shared/custom-input";
-import { api } from "../../api";
-import { useSelector } from "react-redux";
-import { taskSchema } from "../../utils/helper";
 import theme from "../../theme";
 import CustomHeader from "../../shared/custom-header";
 import CustomTable from "../../shared/custom-table";
@@ -25,247 +34,36 @@ import Select from "../../shared/custom-select";
 import CustomModal from "../../shared/custom-model";
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState([]);
-  const [filteredTasks, setFilteredTasks] = useState({});
-  const [searchTerm, setSearchTerm] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [users, setUsers] = useState({});
-  const { role, id } = useSelector((state) => state.auth.userData);
-
   const {
+    role,
+    openModal,
+    setOpenModal,
+    setSearchTerm,
     register,
     handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(taskSchema),
-  });
-
-  const fetchTasks = useCallback(async () => {
-    try {
-      const [tasksResponse, usersResponse] = await Promise.all([
-        api.TASKS.get_all(),
-        api.USERS.get_all(),
-      ]);
-
-      const usersMap = usersResponse.data.reduce((acc, user) => {
-        acc[user.id] = `${user.firstName} ${user.lastName}`;
-        return acc;
-      }, {});
-      setUsers(usersMap);
-
-      if (!tasksResponse.data) return;
-      if (role === "admin") {
-        setTasks(tasksResponse.data);
-      } else if (role === "user") {
-        const data = tasksResponse.data.filter((task) => task.user_id === id);
-        setTasks(data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }, [role, id]);
-
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
-
-  useEffect(() => {
-    if (!searchTerm) {
-      setFilteredTasks({});
-      return;
-    }
-
-    const matches = tasks.filter((task) =>
-      task.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const resultObject = matches.reduce((acc, task) => {
-      acc[task.id] = task;
-      return acc;
-    }, {});
-
-    setFilteredTasks(resultObject);
-  }, [searchTerm, tasks]);
-
-  const handleAddTask = async (data) => {
-    try {
-      await api.TASKS.create({
-        data: {
-          ...data,
-          status: "pending",
-          createdAt: new Date().toISOString(),
-          user_id: id,
-        },
-      });
-      await fetchTasks();
-      handleCloseModal();
-    } catch (error) {
-      console.error("Error adding task:", error);
-    }
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    reset();
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleStatusChange = useCallback(
-    async (taskId, newStatus) => {
-      try {
-        const taskToUpdate = tasks.find((task) => task.id === taskId);
-        if (!taskToUpdate) return;
-
-        await api.TASKS.update({
-          id: taskId,
-          data: { ...taskToUpdate, status: newStatus },
-        });
-        await fetchTasks();
-      } catch (error) {
-        console.error("Error updating task status:", error);
-      }
-    },
-    [fetchTasks, tasks]
-  );
-
-  const columns = useMemo(() => {
-    const baseColumns = [
-      { id: "title", label: "Title", field_name: "title" },
-      { id: "description", label: "Description", field_name: "description" },
-      {
-        id: "createdAt",
-        label: "Created date",
-        field_name: "createdAt",
-        render: ({ row }) => new Date(row.createdAt).toLocaleDateString(),
-      },
-      {
-        id: "priority",
-        label: "Priority",
-        field_name: "priority",
-        render: ({ row }) => {
-          const textColor =
-            row.priority === "High"
-              ? COLORS.ERROR[800]
-              : row.priority === "Medium"
-                ? COLORS.WARNING[800]
-                : COLORS.PRIMARY[800];
-
-          const bgColor =
-            row.priority === "High"
-              ? COLORS.ERROR[50]
-              : row.priority === "Medium"
-                ? COLORS.WARNING[100]
-                : COLORS.PRIMARY[50];
-          return (
-            <Chip
-              label={row.priority}
-              sx={{
-                color: textColor,
-                backgroundColor: bgColor,
-              }}
-            />
-          );
-        },
-      },
-      {
-        id: "status",
-        label: "Status",
-        field_name: "status",
-        render: ({ row }) => {
-          const textColor =
-            row.status === "approved"
-              ? COLORS.PRIMARY[800]
-              : row.status === "rejected"
-                ? COLORS.ERROR[800]
-                : COLORS.WARNING[800];
-
-          const bgColor =
-            row.status === "approved"
-              ? COLORS.PRIMARY[50]
-              : row.status === "rejected"
-                ? COLORS.ERROR[50]
-                : COLORS.WARNING[100];
-          return (
-            <Chip
-              label={row.status}
-              sx={{
-                color: textColor,
-                backgroundColor: bgColor,
-              }}
-            />
-          );
-        },
-      },
-    ];
-    if (role === "admin") {
-      return [
-        {
-          id: "username",
-          label: "Username",
-          field_name: "username",
-          render: ({ row }) => users[row.user_id] || "Unknown User",
-        },
-        ...baseColumns,
-        {
-          id: "actions",
-          label: "Actions",
-          field_name: "actions",
-          render: ({ row }) => {
-            if (row.status === "pending") {
-              return (
-                <Stack
-                  sx={{
-                    gap: 1,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
-                    size="small"
-                    onClick={() => handleStatusChange(row.id, "approved")}
-                    variant="contained"
-                  >
-                    Approve
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={() => handleStatusChange(row.id, "rejected")}
-                    variant="outlined"
-                  >
-                    Reject
-                  </Button>
-                </Stack>
-              );
-            } else {
-              return (
-                <Typography variant="body2" color="textSecondary">
-                  {row.status === "approved" ? "Approved" : "Rejected"}
-                </Typography>
-              );
-            }
-          },
-        },
-      ];
-    } else return baseColumns;
-  }, [handleStatusChange, role, users]);
-
-  const priorityOptions = [
-    { value: "High", label: "High" },
-    { value: "Medium", label: "Medium" },
-    { value: "Low", label: "Low" },
-  ];
+    errors,
+    handleAddTask,
+    handleCloseModal,
+    columns,
+    paginatedTasks,
+    totalPages,
+    page,
+    handlePageChange,
+    priorityOptions,
+    anchorEl,
+    selectedTask,
+    handleMenuClose,
+    handleDelete,
+    handleActions,
+    filterAnchorEl,
+    filters,
+    handleFilterClick,
+    handleFilterClose,
+    handleFilterChange,
+    handleRequestSort,
+    order,
+    orderBy,
+  } = useTasks();
 
   return (
     <>
@@ -282,10 +80,7 @@ const Tasks = () => {
         >
           <Typography
             variant="h5"
-            sx={{
-              color: theme.palette.primary.main,
-              fontWeight: 600,
-            }}
+            sx={{ color: theme.palette.primary.main, fontWeight: 600 }}
           >
             Tasks Management
           </Typography>
@@ -294,50 +89,211 @@ const Tasks = () => {
               color="primary"
               aria-label="add"
               onClick={() => setOpenModal(true)}
-              sx={{
-                backgroundColor: theme.palette.primary.main,
-                "&:hover": {
-                  backgroundColor: theme.palette.primary.main,
-                  opacity: 0.9,
-                },
-              }}
             >
               <AddIcon />
             </Fab>
           )}
         </Box>
 
-        <CustomInput
-          name="search"
-          register={register}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search…"
-          startAdornment={<SearchIcon sx={{ color: COLORS.NEUTRAL.dark }} />}
-          size="small"
-          variant="outlined"
-        />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <CustomInput
+            name="search"
+            register={register}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search…"
+            startAdornment={<SearchIcon sx={{ color: COLORS.NEUTRAL.dark }} />}
+            size="small"
+          />
+          <IconButton onClick={handleFilterClick}>
+            <FilterIcon
+              color={
+                Object.values(filters).some((arr) => arr.length > 0)
+                  ? "primary"
+                  : "inherit"
+              }
+            />
+          </IconButton>
+        </Box>
+
+        <Popover
+          open={Boolean(filterAnchorEl)}
+          anchorEl={filterAnchorEl}
+          onClose={handleFilterClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Box sx={{ p: 2, width: 250 }}>
+            <FormControl component="fieldset" fullWidth>
+              <FormLabel component="legend">Created Date</FormLabel>
+              <MuiFormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.date.includes("today")}
+                      onChange={() => handleFilterChange("date", "today")}
+                    />
+                  }
+                  label="Today"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.date.includes("yesterday")}
+                      onChange={() => handleFilterChange("date", "yesterday")}
+                    />
+                  }
+                  label="Yesterday"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.date.includes("lastWeek")}
+                      onChange={() => handleFilterChange("date", "lastWeek")}
+                    />
+                  }
+                  label="Last Week"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.date.includes("lastMonth")}
+                      onChange={() => handleFilterChange("date", "lastMonth")}
+                    />
+                  }
+                  label="Last Month"
+                />
+              </MuiFormGroup>
+            </FormControl>
+            <Divider sx={{ my: 2 }} />
+            <FormControl component="fieldset" fullWidth>
+              <FormLabel component="legend">Priority</FormLabel>
+              <MuiFormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.priority.includes("high")}
+                      onChange={() => handleFilterChange("priority", "high")}
+                    />
+                  }
+                  label="High"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.priority.includes("medium")}
+                      onChange={() => handleFilterChange("priority", "medium")}
+                    />
+                  }
+                  label="Medium"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.priority.includes("low")}
+                      onChange={() => handleFilterChange("priority", "low")}
+                    />
+                  }
+                  label="Low"
+                />
+              </MuiFormGroup>
+            </FormControl>
+            <Divider sx={{ my: 2 }} />
+            <FormControl component="fieldset" fullWidth>
+              <FormLabel component="legend">Status</FormLabel>
+              <MuiFormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.status.includes("pending")}
+                      onChange={() => handleFilterChange("status", "pending")}
+                    />
+                  }
+                  label="Pending"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.status.includes("approved")}
+                      onChange={() => handleFilterChange("status", "approved")}
+                    />
+                  }
+                  label="Approved"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={filters.status.includes("rejected")}
+                      onChange={() => handleFilterChange("status", "rejected")}
+                    />
+                  }
+                  label="Rejected"
+                />
+              </MuiFormGroup>
+            </FormControl>
+          </Box>
+        </Popover>
 
         <CustomTable
           columns={columns}
-          data={searchTerm ? Object.values(filteredTasks) : tasks}
+          data={paginatedTasks}
           tableName="tasks"
-        />
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={tasks.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            ".MuiTablePagination-select": {
-              color: theme.palette.primary.main,
-            },
-          }}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
         />
 
-        {/* Add Task Modal */}
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            shape="rounded"
+            showFirstButton
+            showLastButton
+          />
+        </Box>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          {selectedTask?.status === "pending" && [
+            <MenuItem
+              key="approve"
+              onClick={() => {
+                handleActions(selectedTask.id, "approved");
+                handleMenuClose();
+              }}
+              sx={{ color: COLORS.PRIMARY.main }}
+            >
+              <ListItemText>Approve</ListItemText>
+            </MenuItem>,
+            <MenuItem
+              key="reject"
+              onClick={() => {
+                handleActions(selectedTask.id, "rejected");
+                handleMenuClose();
+              }}
+              sx={{ color: COLORS.NEUTRAL[600] }}
+            >
+              <ListItemText>Reject</ListItemText>
+            </MenuItem>,
+          ]}
+          <MenuItem
+            onClick={() => {
+              handleDelete(selectedTask);
+              handleMenuClose();
+            }}
+            sx={{ color: "error.main" }}
+          >
+            <ListItemText>Delete</ListItemText>
+          </MenuItem>
+        </Menu>
+
         <CustomModal
           fullWidth
           open={openModal}
@@ -366,41 +322,32 @@ const Tasks = () => {
           >
             <Stack gap={2}>
               <FormGroup
-                sx={{ width: "100%" }}
-                {...{
-                  fullWidth: true,
-                  label: "Title",
-                  name: "title",
-                  register,
-                  error: errors["title"],
-                  placeholder: "Enter task title",
-                  type: "text",
-                }}
+                label="Title"
+                name="title"
+                register={register}
+                error={errors.title}
+                placeholder="Enter task title"
+                type="text"
               />
               <FormGroup
-                sx={{ width: "100%" }}
-                {...{
-                  fullWidth: true,
-                  label: "Description",
-                  name: "description",
-                  register,
-                  error: errors["description"],
-                  placeholder: "Enter task description",
-                  type: "text",
-                  multiline: true,
-                  rows: 3,
-                }}
+                label="Description"
+                name="description"
+                register={register}
+                error={errors.description}
+                placeholder="Enter task description"
+                type="text"
+                multiline
+                rows={3}
               />
               <FormGroup
                 name="priority"
-                error={errors["priority"]}
-                sx={{ width: "100%" }}
-                component={
+                error={errors.priority}
+                select={
                   <Select
                     {...register("priority")}
                     options={priorityOptions}
-                    error={!!errors["priority"]}
-                    helperText={errors["priority"]?.message}
+                    error={!!errors.priority}
+                    helperText={errors.priority?.message}
                     placeholder="Select priority"
                     label="Priority"
                   />

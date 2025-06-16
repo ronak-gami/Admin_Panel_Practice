@@ -27,6 +27,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const {
     register,
     handleSubmit,
@@ -55,7 +56,9 @@ const Login = () => {
         return;
       }
     } catch (error) {
-      console.error("❌ Login error", error?.message);
+      setError(
+        error?.response?.data?.error || "Login failed. please try again"
+      );
     } finally {
       setLoading(false);
     }
@@ -103,6 +106,14 @@ const Login = () => {
             }}
           >
             Login
+          </Typography>
+          <Typography
+            sx={{
+              textAlign: "center",
+              color: theme.palette.error[600],
+            }}
+          >
+            {error}
           </Typography>
           <Form
             handleSubmit={handleSubmit(handleLogin)}
