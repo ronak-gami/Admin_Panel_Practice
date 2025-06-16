@@ -45,7 +45,7 @@ const CustomTable = ({
                 sx={{
                   backgroundColor: theme.palette.primary[50],
                   color: COLORS.NEUTRAL[900],
-                  textAlign: "center",
+                  textAlign: col?.colAlign ? col?.colAlign : "left",
                   fontWeight: 600,
                 }}
               >
@@ -84,7 +84,7 @@ const CustomTable = ({
                     key={`${row.id}-${col.id}`}
                     sx={{
                       color: COLORS.NEUTRAL.dark,
-                      textAlign: "center",
+                      textAlign: col?.colAlign ? col?.colAlign : "left",
                     }}
                   >
                     {col.render

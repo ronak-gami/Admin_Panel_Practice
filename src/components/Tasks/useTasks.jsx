@@ -1,5 +1,3 @@
-// useTasks.jsx
-
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -289,6 +287,7 @@ export const useTasks = () => {
         {
           id: "actions",
           label: "Actions",
+          colAlign: "end",
           render: ({ row }) => (
             <IconButton onClick={(e) => handleMenuOpen(e, row)}>
               <MoreVertIcon />
