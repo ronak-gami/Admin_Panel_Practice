@@ -322,32 +322,40 @@ const Tasks = () => {
           >
             <Stack gap={2}>
               <FormGroup
-                label="Title"
-                name="title"
-                register={register}
-                error={errors.title}
-                placeholder="Enter task title"
-                type="text"
+                sx={{ width: "100%" }}
+                {...{
+                  fullWidth: true,
+                  label: "Title",
+                  name: "title",
+                  register,
+                  error: errors["title"],
+                  placeholder: "Enter task title",
+                  type: "text",
+                }}
               />
               <FormGroup
-                label="Description"
-                name="description"
-                register={register}
-                error={errors.description}
-                placeholder="Enter task description"
-                type="text"
-                multiline
-                rows={3}
+                sx={{ width: "100%" }}
+                {...{
+                  fullWidth: true,
+                  label: "Description",
+                  name: "description",
+                  register,
+                  error: errors["description"],
+                  placeholder: "Enter task description",
+                  type: "text",
+                  multiline: true,
+                  rows: 3,
+                }}
               />
               <FormGroup
                 name="priority"
-                error={errors.priority}
-                select={
+                error={errors["priority"]}
+                sx={{ width: "100%" }}
+                component={
                   <Select
                     {...register("priority")}
                     options={priorityOptions}
-                    error={!!errors.priority}
-                    helperText={errors.priority?.message}
+                    error={!!errors["priority"]}
                     placeholder="Select priority"
                     label="Priority"
                   />
