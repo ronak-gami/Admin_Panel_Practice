@@ -8,26 +8,23 @@ const CustomInput = ({
   error,
   startAdornment,
   endAdornment,
+  type,
   ...props
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleToggle = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
+  const [showPassword, toggleShowPassword] = useToggle(false);
 
   return (
     <TextField
       {...register(name)}
       {...props}
       error={!!error}
-      type={props.type === "password" && !showPassword ? "password" : "text"}
+      type={type === "password" && !showPassword ? "password" : "text"}
       InputProps={{
         startAdornment,
         endAdornment:
-          props.type === "password" ? (
+          type === "password" ? (
             <InputAdornment position="end">
-              <IconButton onClick={handleToggle} edge="end">
+              <IconButton onClick={toggleShowPassword} edge="end">
                 {showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>

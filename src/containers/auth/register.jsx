@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Container, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  InputAdornment,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Button from "../../shared/custom-button";
 import { registerValidationSchema } from "../../utils/helper";
 import { api } from "../../api";
@@ -92,7 +99,7 @@ const Register = () => {
             noValidate
             sx={{ width: "100%" }}
           >
-            <Stack gap={1}>
+            <Stack gap={1.5}>
               <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
                 <FormGroup
                   sx={{ width: "100%" }}
@@ -101,7 +108,7 @@ const Register = () => {
                     name: "firstName",
                     register,
                     error: errors["firstName"],
-                    placeholder: "Enter your first name",
+                    placeholder: "ronak",
                     type: "text",
                   }}
                 />
@@ -112,7 +119,7 @@ const Register = () => {
                     name: "lastName",
                     register,
                     error: errors["lastName"],
-                    placeholder: "Enter your last name",
+                    placeholder: "gami",
                     type: "text",
                   }}
                 />
@@ -120,35 +127,50 @@ const Register = () => {
 
               <FormGroup
                 {...{
+                  fullWidth: true,
                   label: "Email",
                   name: "email",
                   register,
                   error: errors["email"],
                   placeholder: "Enter your email",
                   type: "email",
-                  startAdornment: <MailOutlineIcon color="inherit" />,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MailOutlineIcon />
+                    </InputAdornment>
+                  ),
                 }}
               />
               <FormGroup
                 {...{
+                  fullWidth: true,
                   label: "Password",
                   name: "password",
                   register,
                   error: errors["password"],
                   placeholder: "Enter your password",
                   type: "password",
-                  startAdornment: <LockOutlinedIcon color="inherit" />,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockOutlinedIcon />
+                    </InputAdornment>
+                  ),
                 }}
               />
               <FormGroup
                 {...{
+                  fullWidth: true,
                   label: "Confirm Password",
                   name: "confirmPassword",
                   register,
                   error: errors["confirmPassword"],
                   placeholder: "Enter your confirm password",
                   type: "password",
-                  startAdornment: <LockOutlinedIcon color="inherit" />,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockOutlinedIcon />
+                    </InputAdornment>
+                  ),
                 }}
               />
               <Button loading={loading} variant="contained" type="submit">
