@@ -85,6 +85,10 @@ const theme = createTheme({
           padding: "12px 12px",
           color: COLORS.NEUTRAL[700],
         },
+        "&::placeholder": {
+          color: COLORS.NEUTRAL[700],
+          opacity: 1,
+        },
         inputAdornedStart: {
           paddingLeft: "0px",
         },

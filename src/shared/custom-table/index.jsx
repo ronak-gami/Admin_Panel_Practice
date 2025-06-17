@@ -1,4 +1,5 @@
 import {
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -6,11 +7,12 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
+  Box,
 } from "@mui/material";
-import * as React from "react";
 import { COLORS } from "../../utils/colors";
 import theme from "../../theme";
 import { getComparator } from "../../utils/helper";
+import { useMemo, useState } from "react";
 
 const CustomTable = ({
   columns,
@@ -19,17 +21,35 @@ const CustomTable = ({
   order,
   orderBy,
   onRequestSort,
+  itemsPerPage = 5,
 }) => {
+  const [page, setPage] = useState(1);
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
-  const sortedData = React.useMemo(() => {
+  const sortedData = useMemo(() => {
     if (order && orderBy) {
       return [...data].sort(getComparator(order, orderBy));
     }
     return data;
   }, [order, orderBy, data]);
+
+  // Calculate paginated data
+  const paginatedData = useMemo(() => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedData.slice(startIndex, endIndex);
+  }, [sortedData, page, itemsPerPage]);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+
+  // Handle page change
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
 
   return (
     <TableContainer
@@ -62,12 +82,12 @@ const CustomTable = ({
         </TableHead>
 
         <TableBody>
-          {sortedData.length <= 0 ? (
+          {paginatedData.length <= 0 ? (
             <TableRow>
               <TableCell colSpan={columns.length}>No data found.</TableCell>
             </TableRow>
           ) : (
-            sortedData.map((row, rowIndex) => (
+            paginatedData.map((row, rowIndex) => (
               <TableRow
                 key={row.id}
                 sx={{
@@ -84,7 +104,7 @@ const CustomTable = ({
                     key={`${row.id}-${col.id}`}
                     sx={{
                       color: COLORS.NEUTRAL.dark,
-                      textAlign: col?.colAlign ? col?.colAlign : "left",
+                      textAlign: col?.colAlign ? col?.colAlign : "start",
                     }}
                   >
                     {col.render
@@ -97,6 +117,20 @@ const CustomTable = ({
           )}
         </TableBody>
       </Table>
+
+      {totalPages > 1 && (
+        <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            shape="rounded"
+            showFirstButton
+            showLastButton
+          />
+        </Box>
+      )}
     </TableContainer>
   );
 };

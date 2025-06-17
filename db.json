@@ -13,15 +13,7 @@
       "lastName": "Gami",
       "email": "ronak@gmail.com",
       "password": "Test@123",
-      "id": 1,
-      "role": "user"
-    },
-    {
-      "firstName": "jeel",
-      "lastName": "gosai",
-      "email": "jeel@gmail.com",
-      "password": "Test@123",
-      "id": 2,
+      "id": 101,
       "role": "user"
     },
     {
@@ -29,7 +21,7 @@
       "lastName": "kapdi",
       "email": "ronak@gmail.com",
       "password": "Test@12345",
-      "id": 101,
+      "id": 103,
       "role": "user"
     },
     {
@@ -39,6 +31,38 @@
       "password": "Test@123",
       "id": 102,
       "role": "user"
+    },
+    {
+      "firstName": "Ayush",
+      "lastName": "Nathvani",
+      "email": "ayush@gmail.com",
+      "password": "Test@123",
+      "role": "user",
+      "id": 104
+    },
+    {
+      "firstName": "mansi",
+      "lastName": "Diiiiii",
+      "email": "md@gmail.com",
+      "password": "Test@123",
+      "role": "user",
+      "id": 105
+    },
+    {
+      "firstName": "riddhi",
+      "lastName": "Diiii",
+      "email": "rd@gmail.com",
+      "password": "Test@123",
+      "role": "user",
+      "id": 106
+    },
+    {
+      "firstName": "jeel",
+      "lastName": "gosai",
+      "email": "jeel@gmail.com",
+      "password": "Test@123",
+      "role": "user",
+      "id": 107
     }
   ],
   "tasks": [
@@ -131,25 +155,16 @@
       "search": "",
       "title": "Trips",
       "description": "Jnd to Amd",
-      "status": "pending",
+      "status": "rejected",
       "createdAt": "2025-06-16T05:38:44.988Z",
       "user_id": 2,
       "id": 14
     },
     {
-      "title": "1234567",
-      "description": "jmgmnheii hoe g[ae",
-      "priority": "Medium",
-      "status": "pending",
-      "createdAt": "2025-06-16T05:38:55.811Z",
-      "user_id": 2,
-      "id": 15
-    },
-    {
       "title": "lunch",
       "description": "no lunch",
       "priority": "Medium",
-      "status": "pending",
+      "status": "approved",
       "createdAt": "2025-06-16T05:39:14.581Z",
       "user_id": 2,
       "id": 16
@@ -181,6 +196,137 @@
       "createdAt": "2025-06-16T05:41:09.528Z",
       "user_id": 102,
       "id": 19
+    },
+    {
+      "priority": "Medium",
+      "search": "",
+      "title": "ronak gami",
+      "description": "Test@123",
+      "status": "rejected",
+      "createdAt": "2025-06-17T06:56:03.568Z",
+      "user_id": 104,
+      "id": 20
+    },
+    {
+      "priority": "Medium",
+      "search": "",
+      "title": "123456789",
+      "description": "ASDFFGGHJKLDSZFXGCVJH",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:01:45.218Z",
+      "user_id": 104,
+      "id": 21
+    },
+    {
+      "title": "741852963",
+      "description": "QWFRGTJYULO;LKHJUYGF",
+      "priority": "Low",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:01:56.970Z",
+      "user_id": 104,
+      "id": 22
+    },
+    {
+      "title": "7539518426",
+      "description": "QWERGTJYHUKILLK+JHGFDSA+JK",
+      "priority": "High",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:02:10.538Z",
+      "user_id": 104,
+      "id": 23
+    },
+    {
+      "priority": "Medium",
+      "search": "",
+      "title": "qwertyui",
+      "description": "sfgrtgyljhnbgfvdefgjkljgfd",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:03:35.710Z",
+      "user_id": 107,
+      "id": 24
+    },
+    {
+      "title": "qcfrthjuyklhjmnbfg",
+      "description": "wqertrdxuyggvuy",
+      "priority": "High",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:03:45.990Z",
+      "user_id": 107,
+      "id": 25
+    },
+    {
+      "title": "rtoue fgL:",
+      "description": ";jbaifgeis;n fayw;fha",
+      "priority": "Low",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:03:59.033Z",
+      "user_id": 107,
+      "id": 26
+    },
+    {
+      "title": "phnohb fwipuh",
+      "description": "phsfibefiphsfp",
+      "priority": "Medium",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:04:18.111Z",
+      "user_id": 107,
+      "id": 27
+    },
+    {
+      "priority": "High",
+      "search": "",
+      "title": "670634-6332pe;fh;",
+      "description": "oufsb;owyrq'j",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:04:59.608Z",
+      "user_id": 105,
+      "id": 28
+    },
+    {
+      "title": "807;hf73'pif=",
+      "description": "j0f8yh2n3'if[0",
+      "priority": "Low",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:05:18.034Z",
+      "user_id": 105,
+      "id": 29
+    },
+    {
+      "title": ";hr[hnr;oijn'p[j",
+      "description": "h[nr[0ry[563.4fi;h",
+      "priority": "Medium",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:05:36.384Z",
+      "user_id": 105,
+      "id": 30
+    },
+    {
+      "priority": "Medium",
+      "search": "",
+      "title": "h[' f'ijawuba'ij",
+      "description": "p\nomfobf baowhubf'",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:06:31.307Z",
+      "user_id": 106,
+      "id": 31
+    },
+    {
+      "title": "74185296300",
+      "description": ",fnoo[anf[oh[hu,\nimof n'\nfmi[hn]",
+      "priority": "High",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:06:47.212Z",
+      "user_id": 106,
+      "id": 32
+    },
+    {
+      "title": ",f0000000000000",
+      "description": "00008ooihoooooo",
+      "priority": "Low",
+      "status": "pending",
+      "createdAt": "2025-06-17T08:07:14.844Z",
+      "user_id": 106,
+      "id": 33
     }
   ]
 }

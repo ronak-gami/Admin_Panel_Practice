@@ -1,14 +1,22 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../api";
 import { taskSchema } from "../../utils/helper";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { Chip, IconButton } from "@mui/material";
 import { COLORS } from "../../utils/colors";
+import {
+  Delete as DeleteIcon,
+  Check as CheckIcon,
+  Close as CloseIcon,
+} from "@mui/icons-material";
+import theme from "../../theme";
+import { setAllTasks } from "../../redux/slices/data.slice";
 
 export const useTasks = () => {
+  const dispatch = useDispatch();
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,8 +24,6 @@ export const useTasks = () => {
   const [users, setUsers] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(5);
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("title");
@@ -52,6 +58,7 @@ export const useTasks = () => {
 
       if (!tasksResponse.data) return;
       const tasksData = tasksResponse.data || [];
+      dispatch(setAllTasks(tasksData));
       setTasks(
         role === "admin"
           ? tasksData
@@ -60,7 +67,7 @@ export const useTasks = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, [role, id]);
+  }, [dispatch, role, id]);
 
   useEffect(() => {
     fetchTasks();
@@ -113,6 +120,14 @@ export const useTasks = () => {
     setSelectedTask(null);
   };
 
+  const handleClearFilters = () => {
+    setFilters({
+      date: [],
+      priority: [],
+      status: [],
+    });
+  };
+
   const handleDelete = useCallback(
     async (task) => {
       try {
@@ -142,10 +157,6 @@ export const useTasks = () => {
     [fetchTasks, tasks]
   );
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
-
   const handleFilterClick = (event) => {
     setFilterAnchorEl(event.currentTarget);
   };
@@ -161,7 +172,6 @@ export const useTasks = () => {
         ? prev[type].filter((item) => item !== value)
         : [...prev[type], value],
     }));
-    setPage(1);
   };
 
   const movePendingTasksToTop = (arr) => {
@@ -170,7 +180,7 @@ export const useTasks = () => {
     return [...pendingTasks, ...otherTasks];
   };
 
-  const paginatedTasks = useMemo(() => {
+  const filteredAndSortedTasks = useMemo(() => {
     let filteredData = searchTerm ? Object.values(filteredTasks) : [...tasks];
 
     if (filters.date.length > 0) {
@@ -205,14 +215,8 @@ export const useTasks = () => {
         filters.status.includes(task.status.toLowerCase())
       );
 
-    const sortedData = movePendingTasksToTop(filteredData);
-    return sortedData.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  }, [page, itemsPerPage, searchTerm, filteredTasks, tasks, filters]);
-
-  const totalPages = Math.ceil(
-    (searchTerm ? Object.values(filteredTasks).length : tasks.length) /
-      itemsPerPage
-  );
+    return movePendingTasksToTop(filteredData);
+  }, [searchTerm, filteredTasks, tasks, filters]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -232,6 +236,7 @@ export const useTasks = () => {
       {
         id: "priority",
         label: "Priority",
+        colAlign: "center",
         render: ({ row }) => (
           <Chip
             label={row.priority}
@@ -255,6 +260,7 @@ export const useTasks = () => {
       {
         id: "status",
         label: "Status",
+        colAlign: "center",
         render: ({ row }) => (
           <Chip
             label={row.status}
@@ -287,7 +293,7 @@ export const useTasks = () => {
         {
           id: "actions",
           label: "Actions",
-          colAlign: "end",
+          colAlign: "center",
           render: ({ row }) => (
             <IconButton onClick={(e) => handleMenuOpen(e, row)}>
               <MoreVertIcon />
@@ -305,6 +311,36 @@ export const useTasks = () => {
     { value: "Low", label: "Low" },
   ];
 
+  const menuOptions = useMemo(() => {
+    const options = [];
+
+    if (selectedTask?.status === "pending") {
+      options.push(
+        {
+          label: "Approve",
+          onClick: () => handleActions(selectedTask.id, "approved"),
+          color: COLORS.PRIMARY.main,
+          icon: <CheckIcon fontSize="small" />,
+        },
+        {
+          label: "Reject",
+          onClick: () => handleActions(selectedTask.id, "rejected"),
+          color: COLORS.NEUTRAL[600],
+          icon: <CloseIcon fontSize="small" />,
+        }
+      );
+    }
+
+    options.push({
+      label: "Delete",
+      onClick: () => handleDelete(selectedTask),
+      color: theme.palette.error.main,
+      icon: <DeleteIcon fontSize="small" />,
+    });
+
+    return options;
+  }, [selectedTask, handleActions, handleDelete]);
+
   return {
     role,
     openModal,
@@ -317,10 +353,7 @@ export const useTasks = () => {
     handleAddTask,
     handleCloseModal,
     columns,
-    paginatedTasks,
-    totalPages,
-    page,
-    handlePageChange,
+    tasks: filteredAndSortedTasks,
     priorityOptions,
     anchorEl,
     selectedTask,
@@ -335,5 +368,7 @@ export const useTasks = () => {
     handleRequestSort,
     order,
     orderBy,
+    menuOptions,
+    handleClearFilters,
   };
 };

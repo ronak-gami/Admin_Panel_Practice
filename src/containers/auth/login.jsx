@@ -16,7 +16,7 @@ import Button from "../../shared/custom-button";
 import { api } from "../../api";
 import { setHeaders } from "../../api/client";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserData, setToken } from "../../redux/slices/auth.slice";
 import { URLS } from "../../constants/urls";
 import Form from "../../shared/form";
@@ -24,6 +24,9 @@ import FormGroup from "../../shared/form-group";
 import theme from "../../theme";
 
 const Login = () => {
+  const state = useSelector((state) => state);
+  console.log("----------------state----------------", state);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);

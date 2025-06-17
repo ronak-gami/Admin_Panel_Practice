@@ -1,47 +1,22 @@
-import { Typography, Box, Button, Pagination } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import theme from "../../theme";
 import CustomHeader from "../../shared/custom-header";
 import CustomTable from "../../shared/custom-table";
+import CustomMenu from "../../shared/custom-menu";
 import useUsers from "./useUsers";
+import { COLORS } from "../../utils/colors";
 
 const Users = () => {
   const {
     columns,
-    handleRoleChange,
-    paginatedUsers,
-    totalPages,
-    page,
-    handlePageChange,
+    data,
     order,
     orderBy,
     handleRequestSort,
+    anchorEl,
+    handleMenuClose,
+    menuOptions,
   } = useUsers();
-
-  const renderColumns = columns.map((col) => {
-    if (col.id !== "actions") return col;
-
-    return {
-      ...col,
-      render: ({ row }) => {
-        const actionData = col.render({ row });
-        return (
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() =>
-              handleRoleChange(actionData.userId, actionData.currentRole)
-            }
-            sx={{
-              backgroundColor: actionData.buttonColor,
-              color: theme.palette.primary.contrastText,
-            }}
-          >
-            {actionData.buttonText}
-          </Button>
-        );
-      },
-    };
-  });
 
   return (
     <>
@@ -59,25 +34,20 @@ const Users = () => {
         </Typography>
 
         <CustomTable
-          columns={renderColumns}
-          data={paginatedUsers}
+          columns={columns}
+          data={data}
           tableName="users"
           order={order}
           orderBy={orderBy}
           onRequestSort={handleRequestSort}
+          itemsPerPage={8}
         />
 
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            shape="rounded"
-            showFirstButton
-            showLastButton
-          />
-        </Box>
+        <CustomMenu
+          anchorEl={anchorEl}
+          onClose={handleMenuClose}
+          options={menuOptions}
+        />
       </Box>
     </>
   );

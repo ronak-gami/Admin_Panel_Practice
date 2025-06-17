@@ -7,7 +7,6 @@ import {
   MenuItem,
   ListItemText,
   IconButton,
-  Pagination,
   Popover,
   FormControl,
   FormLabel,
@@ -32,6 +31,7 @@ import FormGroup from "../../shared/form-group";
 import Button from "../../shared/custom-button";
 import Select from "../../shared/custom-select";
 import CustomModal from "../../shared/custom-model";
+import CustomMenu from "../../shared/custom-menu";
 
 const Tasks = () => {
   const {
@@ -45,16 +45,11 @@ const Tasks = () => {
     handleAddTask,
     handleCloseModal,
     columns,
-    paginatedTasks,
-    totalPages,
-    page,
-    handlePageChange,
+    tasks,
     priorityOptions,
     anchorEl,
-    selectedTask,
+    menuOptions,
     handleMenuClose,
-    handleDelete,
-    handleActions,
     filterAnchorEl,
     filters,
     handleFilterClick,
@@ -63,6 +58,7 @@ const Tasks = () => {
     handleRequestSort,
     order,
     orderBy,
+    handleClearFilters,
   } = useTasks();
 
   return (
@@ -123,6 +119,32 @@ const Tasks = () => {
           transformOrigin={{ vertical: "top", horizontal: "right" }}
         >
           <Box sx={{ p: 2, width: 250 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                Filters
+              </Typography>
+              <Button
+                size="small"
+                onClick={handleClearFilters}
+                disabled={!Object.values(filters).some((arr) => arr.length > 0)}
+                sx={{
+                  color: theme.palette.error.main,
+                  "&:hover": {
+                    backgroundColor: `${theme.palette.error.main}15`,
+                  },
+                }}
+              >
+                Clear All
+              </Button>
+            </Box>
+
             <FormControl component="fieldset" fullWidth>
               <FormLabel component="legend">Created Date</FormLabel>
               <MuiFormGroup>
@@ -235,64 +257,19 @@ const Tasks = () => {
 
         <CustomTable
           columns={columns}
-          data={paginatedTasks}
+          data={tasks} // renamed from paginatedTasks
           tableName="tasks"
           order={order}
           orderBy={orderBy}
           onRequestSort={handleRequestSort}
+          itemsPerPage={8}
         />
 
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            shape="rounded"
-            showFirstButton
-            showLastButton
-          />
-        </Box>
-
-        <Menu
+        <CustomMenu
           anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
           onClose={handleMenuClose}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        >
-          {selectedTask?.status === "pending" && [
-            <MenuItem
-              key="approve"
-              onClick={() => {
-                handleActions(selectedTask.id, "approved");
-                handleMenuClose();
-              }}
-              sx={{ color: COLORS.PRIMARY.main }}
-            >
-              <ListItemText>Approve</ListItemText>
-            </MenuItem>,
-            <MenuItem
-              key="reject"
-              onClick={() => {
-                handleActions(selectedTask.id, "rejected");
-                handleMenuClose();
-              }}
-              sx={{ color: COLORS.NEUTRAL[600] }}
-            >
-              <ListItemText>Reject</ListItemText>
-            </MenuItem>,
-          ]}
-          <MenuItem
-            onClick={() => {
-              handleDelete(selectedTask);
-              handleMenuClose();
-            }}
-            sx={{ color: "error.main" }}
-          >
-            <ListItemText>Delete</ListItemText>
-          </MenuItem>
-        </Menu>
+          options={menuOptions}
+        />
 
         <CustomModal
           fullWidth

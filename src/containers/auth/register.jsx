@@ -31,18 +31,18 @@ const Register = () => {
     resolver: yupResolver(registerValidationSchema),
   });
 
-  const handleRegister = (data) => {
+  const handleRegister = async (data) => {
+    console.log("----------------data----------------", data);
     try {
       setLoading(true);
       const payLoad = {
-        firstName: data.firstname,
-        lastName: data.lastname,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         password: data.password,
         role: "user",
       };
-      const response = api.USERS.create({ data: payLoad });
-      console.log("Registration Successful", response);
+      await api.USERS.create({ data: payLoad });
       navigate(URLS.LOGIN);
     } catch (error) {
       console.error("Registration failed:", error);
@@ -124,7 +124,6 @@ const Register = () => {
                   }}
                 />
               </Box>
-
               <FormGroup
                 {...{
                   fullWidth: true,
