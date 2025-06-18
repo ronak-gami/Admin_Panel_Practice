@@ -1,5 +1,6 @@
 import { useState } from "react";
 import withUser from "../hoc/with-user";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
@@ -11,19 +12,23 @@ import {
   ListItemButton,
   IconButton,
   useMediaQuery,
+  Typography,
 } from "@mui/material";
 import {
-  Dashboard as DashboardIcon,
-  Person as PersonIcon,
-  Task as TaskIcon,
+  DashboardOutlined as DashboardIcon,
+  PeopleOutlined as PersonIcon,
+  TaskOutlined as TaskIcon,
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
 } from "@mui/icons-material";
 import { COLORS } from "../utils/colors";
 import { URLS } from "../constants/urls";
-import { useSelector } from "react-redux";
 import theme from "../theme";
+import { LogoutIcon } from "../assets/icons";
+import { clearAuthData } from "../redux/slices/auth.slice";
+import CustomModal from "../shared/custom-model";
+import Button from "../shared/custom-button";
 
 const drawerWidth = 250;
 const closedDrawerWidth = 65;
@@ -60,10 +65,12 @@ const menuItems_Users = [
 ];
 
 const DashboardLayout = () => {
+  const dispatch = useDispatch();
   const { role } = useSelector((state) => state.auth.userData) || null;
   const menuItems = role === "admin" ? menuItems_Admin : menuItems_Users;
   const [open, setOpen] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -80,6 +87,20 @@ const DashboardLayout = () => {
 
   const handleNavigate = (path) => {
     navigate(path);
+  };
+
+  const handleLogoutClick = () => {
+    setOpenDialog(true);
+  };
+
+  const handleConfirmLogout = () => {
+    dispatch(clearAuthData());
+    navigate(URLS.LOGIN);
+    setOpenDialog(false);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   const isDrawerOpen = open || isHovered;
@@ -126,10 +147,9 @@ const DashboardLayout = () => {
       >
         <Box
           sx={{
+            display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: 1,
-            minHeight: 48,
           }}
         >
           {!isMobile && (
@@ -137,22 +157,58 @@ const DashboardLayout = () => {
               {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
           )}
+          {isDrawerOpen ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                color={theme.palette.primary.main}
+                sx={{ fontWeight: 900, fontSize: 24 }}
+              >
+                Insight
+              </Typography>
+              <Typography
+                color={theme.palette.primary.main}
+                sx={{ fontSize: 24 }}
+              >
+                Platform
+              </Typography>
+            </Box>
+          ) : null}
+          {!isMobile && <IconButton />}
         </Box>
-
-        <List sx={{ padding: 2 }}>
+        <Box sx={{ height: "1px", backgroundColor: COLORS.NEUTRAL[400] }} />
+        <List sx={{ padding: "12px 0px" }}>
           {menuItems.map((item) => (
-            <ListItem key={item.path} disablePadding sx={{ mb: 1 }}>
+            <ListItem
+              disablePadding
+              key={item.path}
+              sx={{
+                borderLeft:
+                  location.pathname === item.path
+                    ? `7px solid ${COLORS.PRIMARY.main}`
+                    : `7px solid ${COLORS.PRIMARY.contrastText}`,
+                backgroundColor:
+                  location.pathname === item.path
+                    ? theme.palette.primary[50]
+                    : "transparent",
+              }}
+            >
               <ListItemButton
                 onClick={() => handleNavigate(item.path)}
                 sx={{
-                  borderRadius: 2,
-                  minHeight: 48,
                   justifyContent: isDrawerOpen ? "initial" : "center",
-                  px: 2.5,
-                  backgroundColor:
-                    location.pathname === item.path
-                      ? theme.palette.primary[50]
-                      : "transparent",
+                  "&:hover": {
+                    backgroundColor: "transparent",
+                    cursor: "pointer",
+                  },
+                  "&.Mui-focusVisible": {
+                    backgroundColor: "transparent",
+                  },
                 }}
               >
                 <ListItemIcon
@@ -185,7 +241,61 @@ const DashboardLayout = () => {
             </ListItem>
           ))}
         </List>
+        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ height: "1px", backgroundColor: COLORS.NEUTRAL[400] }} />
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={handleLogoutClick}
+            sx={{
+              justifyContent: isDrawerOpen ? "initial" : "center",
+              "&:hover": {
+                backgroundColor: "transparent",
+                cursor: "pointer",
+              },
+              "&.Mui-focusVisible": {
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                justifyContent: "center",
+                color: COLORS.ERROR[600],
+              }}
+            >
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Logout"
+              sx={{
+                opacity: isDrawerOpen ? 1 : 0,
+                "& .MuiListItemText-primary": {
+                  color: COLORS.ERROR[600],
+                },
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
       </Drawer>
+
+      <CustomModal
+        open={openDialog}
+        onClose={handleCloseDialog}
+        title="Confirm Logout"
+        titleSx={{ color: theme.palette.primary.main }}
+        actions={
+          <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+            <Button variant="outlined" fullWidth onClick={handleCloseDialog}>
+              Cancel
+            </Button>
+            <Button variant="contained" fullWidth onClick={handleConfirmLogout}>
+              Logout
+            </Button>
+          </Box>
+        }
+      >
+        <Typography>Are you sure you want to logout?</Typography>
+      </CustomModal>
 
       <Box
         component="main"

@@ -1,82 +1,78 @@
-import {
-  Box,
-  Container,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
-import Button from "../custom-button";
-import { LoginIcon, LogoutIcon, RegisterIcon } from "../../assets/icons";
-import { useNavigate } from "react-router-dom";
-import { URLS } from "../../constants/urls";
+import { Box, Typography } from "@mui/material";
+import { NotificationsNone as NotificationIcon } from "@mui/icons-material";
 import theme from "../../theme";
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { COLORS } from "../../utils/colors";
-import { clearAuthData } from "../../redux/slices/auth.slice";
-import CustomModal from "../custom-model";
+import { useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { URLS } from "../../constants/urls";
+import Button from "../custom-button";
+import { LoginIcon, RegisterIcon } from "../../assets/icons";
 
 const CustomHeader = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const location = useLocation();
+  const formattedPathName = location.pathname
+    .replace("/", "")
+    .replace(/^\w/, (c) => c.toUpperCase());
   const { token } = useSelector((state) => state.auth);
-  const [openDialog, setOpenDialog] = useState(false);
-
-  const handleLogoutClick = () => {
-    setOpenDialog(true);
-  };
-
-  const handleConfirmLogout = () => {
-    dispatch(clearAuthData());
-    navigate(URLS.LOGIN);
-    setOpenDialog(false);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+  const userData = useSelector((state) => state.auth.userData);
 
   return (
-    <Box sx={{ width: "100%", backgroundColor: theme.palette.primary.main }}>
-      <Container
-        maxWidth="xl"
+    <Box sx={{ backgroundColor: theme.palette.primary.main }}>
+      <Box
         sx={{
+          padding: "4px 24px",
           display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography
-            color={theme.palette.primary.contrastText}
-            sx={{ fontWeight: 900, fontSize: 30 }}
-          >
-            Insight
-          </Typography>
-          <Typography
-            color={theme.palette.primary.contrastText}
-            sx={{ fontSize: 30 }}
-          >
-            Platform
-          </Typography>
-        </Box>
+        {token ? (
+          <Box>
+            <Typography
+              variant="h5"
+              sx={{
+                color: theme.palette.primary.contrastText,
+                fontWeight: 500,
+              }}
+            >
+              {formattedPathName} overview
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography
+              color={theme.palette.primary.contrastText}
+              sx={{ fontWeight: 900, fontSize: 30 }}
+            >
+              Insight
+            </Typography>
+            <Typography
+              color={theme.palette.primary.contrastText}
+              sx={{ fontSize: 30 }}
+            >
+              Platform
+            </Typography>
+          </Box>
+        )}
 
         {token ? (
-          <Button
-            onClick={handleLogoutClick}
-            variant="contained"
+          <Box
             sx={{
-              gap: 1,
-              "&:hover": {
-                backgroundColor: theme.palette.primary.contrastText,
-                color: theme.palette.primary.main,
-              },
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
             }}
           >
-            <LogoutIcon /> Logout
-          </Button>
+            {" "}
+            <NotificationIcon
+              sx={{ color: theme.palette.primary.contrastText }}
+            />
+            <Typography
+              variant="body1"
+              sx={{ color: theme.palette.primary.contrastText }}
+            >
+              {userData.firstName || ""} {userData.lastName || ""}
+            </Typography>
+          </Box>
         ) : (
           <Box gap={2} sx={{ display: "flex", alignItems: "center" }}>
             <Button
@@ -113,29 +109,7 @@ const CustomHeader = () => {
             </Button>
           </Box>
         )}
-        <CustomModal
-          open={openDialog}
-          onClose={handleCloseDialog}
-          title="Confirm Logout"
-          titleSx={{ color: theme.palette.primary.main }}
-          actions={
-            <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
-              <Button variant="outlined" fullWidth onClick={handleCloseDialog}>
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={handleConfirmLogout}
-              >
-                Logout
-              </Button>
-            </Box>
-          }
-        >
-          <Typography>Are you sure you want to logout?</Typography>
-        </CustomModal>
-      </Container>
+      </Box>
     </Box>
   );
 };

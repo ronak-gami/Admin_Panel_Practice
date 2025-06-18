@@ -32,7 +32,6 @@ const Register = () => {
   });
 
   const handleRegister = async (data) => {
-    console.log("----------------data----------------", data);
     try {
       setLoading(true);
       const payLoad = {

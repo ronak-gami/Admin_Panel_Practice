@@ -12,7 +12,7 @@ const AuthLayout = () => {
       <CustomHeader />
       <Box
         sx={{
-          backgroundColor: COLORS.SECONDARY[50],
+          backgroundColor: COLORS.NEUTRAL[50],
           overflow: "hidden",
         }}
       >
