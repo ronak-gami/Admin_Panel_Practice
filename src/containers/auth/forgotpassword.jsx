@@ -1,44 +1,74 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Container, Paper, Typography } from "@mui/material";
-import CustomInput from "../../shared/custom-input";
-import Button from "../../shared//custom-button";
+import {
+  Box,
+  Container,
+  InputAdornment,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Button from "../../shared/custom-button";
 import { api } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { URLS } from "../../constants/urls";
 import { COLORS } from "../../utils/colors";
-import { forgotPasswordSchema } from "../../utils/helper";
+import { emailSchema, passwordSchema } from "../../utils/helper";
 import theme from "../../theme";
+import Form from "../../shared/form";
+import FormGroup from "../../shared/form-group";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState(false);
+  const [user, setUser] = useState({});
+  const [message, setMessage] = useState("");
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(forgotPasswordSchema),
+    resolver: yupResolver(state ? passwordSchema : emailSchema),
   });
+
+  const emailVerify = async (data) => {
+    try {
+      const response = await api.USERS.get_all();
+      const user = Object.values(response.data).find(
+        (user) => user.email === data.email
+      );
+      setMessage("Please enter your new password below.");
+      setState(!!user);
+      setUser(user);
+    } catch (error) {
+      console.error("error during verify email", error);
+    }
+  };
 
   const handleForgotPassword = async (data) => {
     try {
-      setLoading(true);
-      const response = await api.AUTH.forgot_password({
+      const response = await api.USERS.update({
+        id: user.id,
         data: {
-          email: data.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          password: data.password,
+          role: user.role,
         },
       });
-
-      if (response?.data?.success) {
-        // You can add a success message here
-        navigate(URLS.LOGIN);
+      if (response?.data) {
+        setMessage(
+          "Your password has been successfully updated! You can now log in with your new password."
+        );
+        reset();
       }
-    } catch (error) {
-      console.error("Forgot password error:", error);
-    } finally {
-      setLoading(false);
+    } catch {
+      setMessage("Oops! We couldn't update your password. Please try again");
     }
   };
 
@@ -64,24 +94,22 @@ const ForgotPassword = () => {
           elevation={12}
           sx={{
             padding: 4,
-            maxWidth: 600,
+            maxWidth: 500,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
+            borderRadius: 3,
+            gap: 2,
           }}
         >
           <Typography
             variant="h4"
             component="h1"
-            gutterBottom
             sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              color: theme.palette.primary.main,
               fontWeight: 600,
+              color: theme.palette.primary.main,
             }}
           >
             Forgot Password
@@ -90,60 +118,90 @@ const ForgotPassword = () => {
             variant="body1"
             sx={{
               textAlign: "center",
-              mb: 3,
+              mb: 2,
               color: COLORS.NEUTRAL.dark,
             }}
           >
-            Enter your email address and we'll send you a link to reset your
-            password.
+            {/*  } */}
+            {message ||
+              "Please wait while we check if your email is in our records..."}
           </Typography>
-          <form
-            onSubmit={handleSubmit(handleForgotPassword)}
+          <Form
+            handleSubmit={handleSubmit(
+              state ? handleForgotPassword : emailVerify
+            )}
             noValidate
-            style={{ width: "100%" }}
+            sx={{ width: "100%" }}
           >
-            <Box flexDirection={"column"} gap={1.5} sx={{ display: "flex" }}>
-              <CustomInput
-                name="email"
-                label="Email"
-                register={register}
-                errors={errors}
-              />
-              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+            <Stack gap={2}>
+              {state ? (
+                <>
+                  <FormGroup
+                    {...{
+                      fullWidth: true,
+                      label: "New Password",
+                      name: "password",
+                      register,
+                      error: errors["password"],
+                      placeholder: "Enter new password",
+                      type: "password",
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <FormGroup
+                    {...{
+                      fullWidth: true,
+                      label: "Confirm Password",
+                      name: "confirmPassword",
+                      register,
+                      error: errors["confirmPassword"],
+                      placeholder: "Confirm new password",
+                      type: "password",
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </>
+              ) : (
+                <FormGroup
+                  {...{
+                    fullWidth: true,
+                    label: "Email",
+                    name: "email",
+                    register,
+                    error: errors["email"],
+                    placeholder: "Enter your email",
+                    type: "text",
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MailOutlineIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
+
+              <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
                 <Button
                   variant="outlined"
-                  sx={{
-                    color: theme.palette.primary.main,
-                    borderColor: theme.palette.primary.main,
-                    backgroundColor: "transparent",
-                  }}
-                  size="large"
                   fullWidth
                   onClick={() => navigate(URLS.LOGIN)}
                 >
                   Back to Login
                 </Button>
-                <Button
-                  loading={loading}
-                  variant="contained"
-                  sx={{
-                    color: "white",
-                    fontWeight: 600,
-                    backgroundColor: theme.palette.primary.main,
-                    "&:hover": {
-                      backgroundColor: theme.palette.primary.main,
-                      opacity: 0.9,
-                    },
-                  }}
-                  size="large"
-                  type="submit"
-                  fullWidth
-                >
-                  Send Reset Link
+                <Button variant="contained" type="submit" fullWidth>
+                  Reset Password
                 </Button>
               </Box>
-            </Box>
-          </form>
+            </Stack>
+          </Form>
         </Paper>
       </Box>
     </Container>

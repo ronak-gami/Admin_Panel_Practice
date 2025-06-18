@@ -36,7 +36,7 @@ const Dashboard = () => {
   return (
     <>
       <CustomHeader />
-      <Box sx={{ padding: 3, backgroundColor: theme.palette.neutral[50] }}>
+      <Box sx={{ padding: 3 }}>
         {/* Pie Charts Container */}
         <Typography
           variant="h6"
@@ -55,7 +55,7 @@ const Dashboard = () => {
         >
           <Grid size={6}>
             <Paper
-              elevation={9}
+              elevation={6}
               sx={{
                 height: 420,
                 p: 3,
@@ -79,7 +79,7 @@ const Dashboard = () => {
 
           <Grid size={6}>
             <Paper
-              elevation={9}
+              elevation={6}
               sx={{
                 height: 420,
                 p: 3,
@@ -120,7 +120,7 @@ const Dashboard = () => {
         >
           <Grid size={6}>
             <Paper
-              elevation={9}
+              elevation={6}
               sx={{
                 height: 420,
                 p: 3,
@@ -144,7 +144,7 @@ const Dashboard = () => {
 
           <Grid size={6}>
             <Paper
-              elevation={9}
+              elevation={6}
               sx={{
                 height: 420,
                 p: 3,

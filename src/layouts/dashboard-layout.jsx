@@ -137,11 +137,12 @@ const DashboardLayout = () => {
           "& .MuiDrawer-paper": {
             width: isDrawerOpen ? drawerWidth : closedDrawerWidth,
             boxSizing: "border-box",
-            overflowX: "hidden",
+            backgroundColor: COLORS.PRIMARY[25],
             transition: theme.transitions.create("width", {
               easing: theme.transitions.easing.sharp,
               duration: theme.transitions.duration.enteringScreen,
             }),
+            overflowX: "hidden",
           },
         }}
       >
@@ -194,7 +195,7 @@ const DashboardLayout = () => {
                     : `7px solid ${COLORS.PRIMARY.contrastText}`,
                 backgroundColor:
                   location.pathname === item.path
-                    ? theme.palette.primary[50]
+                    ? theme.palette.primary[75]
                     : "transparent",
               }}
             >
@@ -304,6 +305,7 @@ const DashboardLayout = () => {
           minHeight: "100vh",
           ml: isMobile ? 0 : `${closedDrawerWidth}px`,
           width: isMobile ? "100%" : `calc(100% - ${closedDrawerWidth}px)`,
+          backgroundColor: theme.palette.neutral[25],
           transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,

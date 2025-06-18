@@ -22,6 +22,7 @@ import { URLS } from "../../constants/urls";
 import Form from "../../shared/form";
 import FormGroup from "../../shared/form-group";
 import theme from "../../theme";
+import { COLORS } from "../../utils/colors";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -68,7 +69,6 @@ const Login = () => {
     <Container
       maxWidth={false}
       sx={{
-        justifyContent: "center",
         alignItems: "center",
         height: "100vh",
         display: "flex",
@@ -98,10 +98,8 @@ const Login = () => {
           <Typography
             variant="h4"
             component="h1"
-            gutterBottom
             sx={{
               fontWeight: 600,
-              textAlign: "start",
               color: theme.palette.primary.main,
             }}
           >
@@ -153,6 +151,21 @@ const Login = () => {
                   ),
                 }}
               />
+              <Typography
+                variant="body2"
+                textAlign="right"
+                onClick={() => navigate(URLS.FORGOT_PASSWORD)}
+                sx={{
+                  cursor: "pointer",
+                  color: COLORS.PRIMARY.main,
+                  "&:hover": {
+                    opacity: 0.85,
+                    color: COLORS.PRIMARY.dark,
+                  },
+                }}
+              >
+                Forgot password?
+              </Typography>
               <Button
                 loading={loading}
                 variant="contained"

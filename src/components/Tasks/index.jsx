@@ -11,6 +11,7 @@ import {
   Divider,
   Checkbox,
   FormGroup as MuiFormGroup,
+  InputAdornment,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -94,7 +95,11 @@ const Tasks = () => {
             register={register}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search…"
-            startAdornment={<SearchIcon sx={{ color: COLORS.NEUTRAL.dark }} />}
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            }
             size="small"
           />
           <IconButton onClick={handleFilterClick}>

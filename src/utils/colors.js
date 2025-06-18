@@ -1,5 +1,7 @@
 const TEAL = {
+  25: "#f0fbfa",
   50: "#e0f8f6",
+  75: "#cdefef",
   100: "#b3ece6",
   200: "#80dfd6",
   300: "#4dd2c6",
@@ -14,8 +16,11 @@ const TEAL = {
   dark: "#0d6c67",
   contrastText: "#ffffff",
 };
+
 const SKY = {
+  25: "#f0fafd",
   50: "#e0f5fe",
+  75: "#cdecfb",
   100: "#b3e4fb",
   200: "#80d2f9",
   300: "#4dc0f6",
@@ -30,6 +35,7 @@ const SKY = {
   dark: "#126fa0",
   contrastText: "#ffffff",
 };
+
 const PINK = {
   50: "#fde0e9",
   100: "#fab3c9",
@@ -64,7 +70,9 @@ const AMBER = {
   contrastText: "#ffffff",
 };
 const GRAY = {
+  25: "#fdfdfd",
   50: "#fafafa",
+  75: "#f5f5f5",
   100: "#f0f0f0",
   200: "#e5e5e5",
   300: "#dadada",
@@ -79,6 +87,7 @@ const GRAY = {
   dark: "#8c8c8c",
   contrastText: "#000000",
 };
+
 const INDIGO = {
   50: "#ecebff",
   100: "#c8c6ff",

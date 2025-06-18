@@ -63,7 +63,7 @@ const CustomTable = ({
                 key={col.id}
                 sortDirection={orderBy === col.id ? order : false}
                 sx={{
-                  backgroundColor: theme.palette.primary[50],
+                  backgroundColor: theme.palette.primary[75],
                   color: COLORS.NEUTRAL[900],
                   textAlign: col?.colAlign ? col?.colAlign : "left",
                   fontWeight: 600,
