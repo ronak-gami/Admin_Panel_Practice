@@ -74,20 +74,17 @@ const theme = createTheme({
         root: {
           fontSize: "0.95rem",
           borderRadius: 8,
-          "& .MuiOutlinedInput-notchedOutline": {
-            top: 0,
-          },
           "& .MuiOutlinedInput-notchedOutline > legend": {
-            display: "none",
+            maxWidth: 0,
           },
         },
         input: {
           padding: "12px 12px",
           color: COLORS.NEUTRAL[700],
-        },
-        "&::placeholder": {
-          color: COLORS.NEUTRAL[700],
-          opacity: 1,
+          "&::placeholder": {
+            color: COLORS.NEUTRAL[500],
+            opacity: 1,
+          },
         },
         inputAdornedStart: {
           paddingLeft: "0px",
@@ -102,6 +99,9 @@ const theme = createTheme({
     },
 
     MuiInputLabel: {
+      defaultProps: {
+        shrink: true,
+      },
       styleOverrides: {
         root: {
           fontSize: "0.85rem",

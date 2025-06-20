@@ -105,7 +105,7 @@ const INDIGO = {
   contrastText: "#ffffff",
 };
 
-const COLORS = {
+export const COLORS = {
   PRIMARY: SKY,
   SECONDARY: TEAL,
   ERROR: PINK,
@@ -113,5 +113,3 @@ const COLORS = {
   NEUTRAL: GRAY,
   ACCENT: INDIGO,
 };
-
-export { COLORS };

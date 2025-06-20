@@ -21,7 +21,6 @@ import { setUserData, setToken } from "../../redux/slices/auth.slice";
 import { URLS } from "../../constants/urls";
 import Form from "../../shared/form";
 import FormGroup from "../../shared/form-group";
-import theme from "../../theme";
 import { COLORS } from "../../utils/colors";
 
 const Login = () => {
@@ -98,19 +97,12 @@ const Login = () => {
           <Typography
             variant="h4"
             component="h1"
-            sx={{
-              fontWeight: 600,
-              color: theme.palette.primary.main,
-            }}
+            color="primary"
+            sx={{ fontWeight: 600 }}
           >
             Login
           </Typography>
-          <Typography
-            sx={{
-              textAlign: "center",
-              color: theme.palette.error[600],
-            }}
-          >
+          <Typography color="error.500" sx={{ textAlign: "center" }}>
             {error}
           </Typography>
           <Form

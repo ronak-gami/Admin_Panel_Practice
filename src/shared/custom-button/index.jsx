@@ -1,7 +1,7 @@
-import Button from "@mui/material/Button";
+import Btn from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const CustomButton = ({
+const Button = ({
   label,
   children,
   loading = false,
@@ -9,14 +9,14 @@ const CustomButton = ({
   ...props
 }) => {
   return (
-    <Button disabled={disabled || loading} {...props}>
+    <Btn disabled={disabled || loading} {...props}>
       {loading ? (
         <CircularProgress color="inherit" size={24} />
       ) : (
         label || children
       )}
-    </Button>
+    </Btn>
   );
 };
 
-export default CustomButton;
+export default Button;

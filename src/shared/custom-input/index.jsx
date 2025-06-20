@@ -21,6 +21,8 @@ const CustomInput = ({
       {...props}
       error={!!error}
       type={type === "password" && !showPassword ? "password" : "text"}
+      variant="outlined"
+      placeholder={props.placeholder}
       InputProps={{
         startAdornment,
         endAdornment:

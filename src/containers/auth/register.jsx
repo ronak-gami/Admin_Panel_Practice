@@ -107,7 +107,7 @@ const Register = () => {
                     name: "firstName",
                     register,
                     error: errors["firstName"],
-                    placeholder: "ronak",
+                    placeholder: "Enter your firstname",
                     type: "text",
                   }}
                 />
@@ -118,7 +118,7 @@ const Register = () => {
                     name: "lastName",
                     register,
                     error: errors["lastName"],
-                    placeholder: "gami",
+                    placeholder: "Enter your lastname",
                     type: "text",
                   }}
                 />
