@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { URLS } from "../constants/urls";
-import Login from "../containers/auth/login";
 import Register from "../containers/auth/register";
 import { useSelector } from "react-redux";
 import Dashboard from "../components/Dashboard";
 import Users from "../components/Users";
 import Tasks from "../components/Tasks";
 import ForgotPassword from "../containers/auth/forgotpassword";
+import Login from "../containers/auth/login";
 
 const useRoutes = () => {
   const user = useSelector((state) => {

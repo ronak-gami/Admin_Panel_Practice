@@ -11,7 +11,7 @@
     {
       "firstName": "Ronak",
       "lastName": "Gami",
-      "email": "ronak@gmail.com",
+      "email": "rg@gmail.com",
       "password": "Test@123",
       "id": 101,
       "role": "user"
@@ -19,7 +19,7 @@
     {
       "firstName": "ronak",
       "lastName": "kapdi",
-      "email": "ronak@gmail.com",
+      "email": "rk@gmail.com",
       "password": "Test@12345",
       "id": 103,
       "role": "user"
@@ -27,7 +27,7 @@
     {
       "firstName": "rudra",
       "lastName": "sojitra",
-      "email": "rudra@gmail.com",
+      "email": "rs@gmail.com",
       "password": "Test@123",
       "id": 102,
       "role": "user"
@@ -35,7 +35,7 @@
     {
       "firstName": "Ayush",
       "lastName": "Nathvani",
-      "email": "ayush@gmail.com",
+      "email": "an@gmail.com",
       "password": "Test@123",
       "role": "user",
       "id": 104
@@ -59,10 +59,26 @@
     {
       "firstName": "jeel",
       "lastName": "gosai",
-      "email": "jeel@gmail.com",
+      "email": "jg@gmail.com",
       "password": "Test@123",
       "role": "user",
       "id": 107
+    },
+    {
+      "firstName": "anand",
+      "lastName": "patel",
+      "email": "ap@gmail.com",
+      "password": "Test@123",
+      "role": "user",
+      "id": 108
+    },
+    {
+      "firstName": "mit",
+      "lastName": "patel",
+      "email": "mp@gmail.com",
+      "password": "Test@123",
+      "role": "user",
+      "id": 109
     }
   ],
   "tasks": [

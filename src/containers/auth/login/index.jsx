@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Container,
@@ -11,58 +8,23 @@ import {
 } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { loginValidationSchema } from "../../utils/helper";
-import Button from "../../shared/custom-button";
-import { api } from "../../api";
-import { setHeaders } from "../../api/client";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setUserData, setToken } from "../../redux/slices/auth.slice";
-import { URLS } from "../../constants/urls";
-import Form from "../../shared/form";
-import FormGroup from "../../shared/form-group";
-import { COLORS } from "../../utils/colors";
+import Button from "../../../shared/custom-button";
+import Form from "../../../shared/form";
+import FormGroup from "../../../shared/form-group";
+import { COLORS } from "../../../utils/colors";
+import useLogin from "./useLogin";
 
 const Login = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const {
+    loading,
+    error,
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(loginValidationSchema),
-  });
-
-  const handleLogin = async (data) => {
-    try {
-      setLoading(true);
-      const response = await api.AUTH.login({
-        data: {
-          email: data.email,
-          password: data.password,
-        },
-      });
-      const { user, token } = response.data;
-      if (user && token) {
-        localStorage.setItem("token", token);
-        dispatch(setUserData(user));
-        dispatch(setToken(token));
-        setHeaders("Authorization", `Bearer ${token}`);
-        navigate(URLS.DASHBOARD);
-      } else {
-        return;
-      }
-    } catch (error) {
-      setError(
-        error?.response?.data?.error || "Login failed. please try again"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    errors,
+    handleLogin,
+    navigate,
+    URLS,
+  } = useLogin();
 
   return (
     <Container
@@ -102,11 +64,16 @@ const Login = () => {
           >
             Login
           </Typography>
-          <Typography color="error.500" sx={{ textAlign: "center" }}>
-            {error}
-          </Typography>
+
+          {/* Display error message if it exists */}
+          {error && (
+            <Typography color="error.main" sx={{ textAlign: "center" }}>
+              {error}
+            </Typography>
+          )}
+
           <Form
-            handleSubmit={handleSubmit(handleLogin)}
+            onSubmit={handleSubmit(handleLogin)}
             noValidate
             sx={{ width: "100%" }}
           >
@@ -117,7 +84,7 @@ const Login = () => {
                   label: "Email",
                   name: "email",
                   register,
-                  error: errors["email"],
+                  error: errors.email,
                   placeholder: "Enter your email",
                   type: "text",
                   startAdornment: (
@@ -133,7 +100,7 @@ const Login = () => {
                   label: "Password",
                   name: "password",
                   register,
-                  error: errors["password"],
+                  error: errors.password,
                   placeholder: "Enter your password",
                   type: "password",
                   startAdornment: (

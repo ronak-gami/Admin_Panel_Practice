@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Container,
@@ -9,46 +6,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import Button from "../../shared/custom-button";
-import { registerValidationSchema } from "../../utils/helper";
-import { api } from "../../api";
-import { useNavigate } from "react-router-dom";
-import { URLS } from "../../constants/urls";
-import Form from "../../shared/form";
-import FormGroup from "../../shared/form-group";
+import Button from "../../../shared/custom-button";
+import Form from "../../../shared/form";
+import FormGroup from "../../../shared/form-group";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import theme from "../../theme";
-
+import theme from "../../../theme";
+import useRegister from "./useRegister";
 const Register = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(registerValidationSchema),
-  });
-
-  const handleRegister = async (data) => {
-    try {
-      setLoading(true);
-      const payLoad = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        password: data.password,
-        role: "user",
-      };
-      await api.USERS.create({ data: payLoad });
-      navigate(URLS.LOGIN);
-    } catch (error) {
-      console.error("Registration failed:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { loading, error, register, handleSubmit, errors, handleRegister } =
+    useRegister();
 
   return (
     <Container
@@ -93,8 +60,16 @@ const Register = () => {
           >
             Register
           </Typography>
+
+          {/* Display API errors to the user */}
+          {error && (
+            <Typography color="error" sx={{ textAlign: "center" }}>
+              {error}
+            </Typography>
+          )}
+
           <Form
-            handleSubmit={handleSubmit(handleRegister)}
+            onSubmit={handleSubmit(handleRegister)}
             noValidate
             sx={{ width: "100%" }}
           >
@@ -106,7 +81,7 @@ const Register = () => {
                     label: "First Name",
                     name: "firstName",
                     register,
-                    error: errors["firstName"],
+                    error: errors.firstName,
                     placeholder: "Enter your firstname",
                     type: "text",
                   }}
@@ -117,7 +92,7 @@ const Register = () => {
                     label: "Last Name",
                     name: "lastName",
                     register,
-                    error: errors["lastName"],
+                    error: errors.lastName,
                     placeholder: "Enter your lastname",
                     type: "text",
                   }}
@@ -129,7 +104,7 @@ const Register = () => {
                   label: "Email",
                   name: "email",
                   register,
-                  error: errors["email"],
+                  error: errors.email,
                   placeholder: "Enter your email",
                   type: "email",
                   startAdornment: (
@@ -145,7 +120,7 @@ const Register = () => {
                   label: "Password",
                   name: "password",
                   register,
-                  error: errors["password"],
+                  error: errors.password,
                   placeholder: "Enter your password",
                   type: "password",
                   startAdornment: (
@@ -161,7 +136,7 @@ const Register = () => {
                   label: "Confirm Password",
                   name: "confirmPassword",
                   register,
-                  error: errors["confirmPassword"],
+                  error: errors.confirmPassword,
                   placeholder: "Enter your confirm password",
                   type: "password",
                   startAdornment: (

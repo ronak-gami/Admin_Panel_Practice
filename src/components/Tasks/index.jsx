@@ -19,7 +19,6 @@ import {
   FilterListAlt as FilterIcon,
 } from "@mui/icons-material";
 import { useTasks } from "./useTasks";
-import { COLORS } from "../../utils/colors";
 import CustomInput from "../../shared/custom-input";
 import theme from "../../theme";
 import CustomHeader from "../../shared/custom-header";
