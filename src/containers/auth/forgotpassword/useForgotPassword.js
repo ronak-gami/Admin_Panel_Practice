@@ -5,27 +5,25 @@ import { useNavigate } from "react-router-dom";
 import { emailSchema, passwordSchema } from "../../../utils/helper";
 import { api } from "../../../api";
 import { URLS } from "../../../constants/urls";
-import useApi from "../../../hooks/use-api";
+import apiClient from "../../../hooks/use-api";
 
 const useForgotPassword = () => {
   const navigate = useNavigate();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [verifiedUser, setVerifiedUser] = useState(null);
-  const [feedback, setFeedback] = useState({
-    message: "Please enter your email to verify your account.",
-    type: "info",
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [feedback, setFeedback] = useState(
+    "Please enter your email to verify your account."
+  );
   const [showSnack, setShowSnack] = useState({
     flag: false,
     message: "",
     type: "",
   });
-  const {
-    data: allUsersData,
-    loading: loading_getAllUsers,
-    callApi: callApi_getAllUsers,
-  } = useApi(api.USERS.get_all);
-  const { callApi: callApi_updateUsers } = useApi(api.USERS.update);
+
+  const getAllUsers = apiClient(api.USERS.get_all);
+  const updateUser = apiClient(api.USERS.update);
+
   const {
     register,
     handleSubmit,
@@ -40,58 +38,77 @@ const useForgotPassword = () => {
     reset();
   }, [isEmailVerified, reset]);
 
-  const handleEmailVerify = (formData) => {
-    setFeedback({ message: "Verifying your email...", type: "info" });
-    callApi_getAllUsers();
-    const user = Object.values(allUsersData.data).find(
-      (u) => u.email === formData.email
-    );
+  const handleEmailVerify = async (formData) => {
+    setFeedback("Verifying your email...");
+    setIsLoading(true);
+    try {
+      const { data: allUsersResponse, error } = await getAllUsers();
 
-    if (user) {
-      setVerifiedUser(user);
-      setIsEmailVerified(true);
-      setFeedback({
-        message: "Email verified. Please enter your new password.",
-        type: "success",
-      });
-      setShowSnack({
-        flag: true,
-        message: "Your email is verified successfully",
-        type: "success",
-      });
-    } else {
-      setFeedback({
-        message: "This email is not registered with us.",
-        type: "error",
-      });
+      if (error) {
+        setShowSnack({ flag: true, message: error, type: "error" });
+        return;
+      }
+
+      if (allUsersResponse && allUsersResponse.data) {
+        const user = Object.values(allUsersResponse.data).find(
+          (u) => u.email === formData.email
+        );
+
+        if (user) {
+          setVerifiedUser(user);
+          setIsEmailVerified(true);
+          setFeedback("Please enter your new password.");
+          setShowSnack({
+            flag: true,
+            message: "Your email is verified successfully",
+            type: "success",
+          });
+        } else {
+          setShowSnack({
+            flag: true,
+            message: "This email is not registered with us.",
+            type: "error",
+          });
+        }
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handlePasswordReset = (formData) => {
-    setFeedback({ message: "Updating your password...", type: "info" });
-    callApi_updateUsers({
-      id: verifiedUser.id,
-      data: { ...verifiedUser, password: formData.password },
-    });
+  const handlePasswordReset = async (formData) => {
+    setFeedback("Updating your password...");
+    setIsLoading(true);
+    try {
+      const { data: updateUsersResponse, error } = await updateUser({
+        id: verifiedUser.id,
+        data: { ...verifiedUser, password: formData.password },
+      });
 
-    setShowSnack({
-      flag: true,
-      message: "Password updated successfully! You can now log in.",
-      type: "success",
-    });
-    reset();
-  };
-
-  const getFeedbackColor = () => {
-    if (feedback.type === "error") return "error.main";
-    if (feedback.type === "success") return "success.main";
-    return "neutral.dark";
+      if (error) {
+        setShowSnack({ flag: true, message: error, type: "error" });
+        return;
+      }
+      console.log("updateUsersResponse: ", updateUsersResponse);
+      if (updateUsersResponse && updateUsersResponse.data) {
+        console.log("====================================");
+        setShowSnack({
+          flag: true,
+          message: "Password updated successfully!",
+          type: "success",
+        });
+        reset();
+      }
+    } finally {
+      setFeedback("");
+      setIsLoading(false);
+    }
   };
 
   const onSubmit = isEmailVerified ? handlePasswordReset : handleEmailVerify;
 
   return {
-    loading_getAllUsers,
+    loading: isLoading,
     feedback,
     isEmailVerified,
     register,
@@ -100,7 +117,6 @@ const useForgotPassword = () => {
     onSubmit,
     navigate,
     URLS,
-    getFeedbackColor,
     showSnack,
   };
 };

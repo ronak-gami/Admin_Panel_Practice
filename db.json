@@ -4,7 +4,7 @@
       "firstName": "Admin",
       "lastName": "admin",
       "email": "admin@gmail.com",
-      "password": "Admin@123",
+      "password": "Test@123",
       "id": 100,
       "role": "admin"
     },
@@ -20,7 +20,7 @@
       "firstName": "ronak",
       "lastName": "kapdi",
       "email": "rk@gmail.com",
-      "password": "Test@12345",
+      "password": "Test@123",
       "id": 103,
       "role": "user"
     },

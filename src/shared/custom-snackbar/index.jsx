@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const Snackbar = ({
   message,
-  duration = 3000,
+  duration = 6000,
   stateChange,
   type = "success", //'success' | 'info' | 'warning' | 'error'
   ...props
@@ -40,7 +40,3 @@ const Snackbar = ({
 };
 
 export default Snackbar;
-
-// const [showSnack, setShowSnack] = useState(false);
-// <Button onClick={() => setShowSnack(true)}>Show Snackbar</Button>
-// <Snackbar message="This is my snackbar" duration={3000} stateChange={showSnack} />

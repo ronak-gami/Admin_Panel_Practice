@@ -17,7 +17,7 @@ import Snackbar from "../../../shared/custom-snackbar";
 
 const ForgotPassword = () => {
   const {
-    loading_getAllUsers,
+    loading,
     feedback,
     isEmailVerified,
     register,
@@ -26,7 +26,6 @@ const ForgotPassword = () => {
     onSubmit,
     navigate,
     URLS,
-    getFeedbackColor,
     showSnack,
   } = useForgotPassword();
 
@@ -71,9 +70,10 @@ const ForgotPassword = () => {
 
           <Typography
             variant="body1"
-            sx={{ textAlign: "center", mb: 2, color: getFeedbackColor() }}
+            color="neutral.dark"
+            sx={{ textAlign: "center", mb: 2 }}
           >
-            {feedback.message}
+            {feedback}
           </Typography>
 
           <Form
@@ -84,7 +84,6 @@ const ForgotPassword = () => {
             <Stack gap={2}>
               {isEmailVerified ? (
                 <>
-                  {/* New Password Fields */}
                   <FormGroup
                     {...{
                       fullWidth: true,
@@ -120,7 +119,6 @@ const ForgotPassword = () => {
                 </>
               ) : (
                 <>
-                  {/* Email Verification Field */}
                   <FormGroup
                     {...{
                       fullWidth: true,
@@ -144,12 +142,13 @@ const ForgotPassword = () => {
                 <Button
                   variant="outlined"
                   fullWidth
+                  disabled={loading}
                   onClick={() => navigate(URLS.LOGIN)}
                 >
                   Back to Login
                 </Button>
                 <Button
-                  loading={loading_getAllUsers}
+                  loading={loading}
                   variant="contained"
                   type="submit"
                   fullWidth
