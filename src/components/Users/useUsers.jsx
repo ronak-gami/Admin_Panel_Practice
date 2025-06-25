@@ -3,9 +3,10 @@ import { api } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
 import { IconButton } from "@mui/material";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
-import { deleteUser, setAllUsers } from "../../redux/slices/data.slice";
+import { deleteUser } from "../../redux/slices/data.slice";
 import theme from "../../theme";
 import { COLORS } from "../../utils/colors";
+import { fetchUsers } from "../../redux/slices/data.slice";
 const useUsers = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.data.users);
@@ -15,19 +16,19 @@ const useUsers = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const fetchUsers = useCallback(async () => {
-    try {
-      const response = await api.USERS.get_all();
-      const filteredUsers = response.data.filter((user) => user.id !== 100);
-      dispatch(setAllUsers(filteredUsers));
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  }, [dispatch]);
+  // const fetchUsers = useCallback(async () => {
+  //   try {
+  //     const response = await api.USERS.get_all();
+  //     const filteredUsers = response.data.filter((user) => user.id !== 100);
+  //     dispatch(setAllUsers(filteredUsers));
+  //   } catch (error) {
+  //     console.error("Error fetching users:", error);
+  //   }
+  // }, [dispatch]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   const handleRoleChange = useCallback(
     async (userId, currentRole) => {
@@ -40,13 +41,12 @@ const useUsers = () => {
           id: userId,
           data: { ...userToUpdate, role: newRole },
         });
-
-        await fetchUsers();
+        dispatch(fetchUsers());
       } catch (error) {
         console.error("Error updating user role:", error);
       }
     },
-    [fetchUsers, users]
+    [dispatch, users]
   );
 
   const handleDeleteUser = useCallback(
@@ -54,13 +54,13 @@ const useUsers = () => {
       try {
         await api.USERS.delete({ id: userId });
         dispatch(deleteUser(userId));
-        await fetchUsers();
+        dispatch(fetchUsers());
         handleMenuClose();
       } catch (error) {
         console.error("Error deleting user:", error);
       }
     },
-    [dispatch, fetchUsers]
+    [dispatch]
   );
 
   const handleRequestSort = (event, property) => {

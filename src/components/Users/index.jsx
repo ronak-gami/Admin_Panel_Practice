@@ -4,7 +4,6 @@ import CustomHeader from "../../shared/custom-header";
 import CustomTable from "../../shared/custom-table";
 import CustomMenu from "../../shared/custom-menu";
 import useUsers from "./useUsers";
-import { COLORS } from "../../utils/colors";
 
 const Users = () => {
   const {

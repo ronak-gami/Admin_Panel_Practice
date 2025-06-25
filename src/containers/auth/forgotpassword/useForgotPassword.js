@@ -86,12 +86,10 @@ const useForgotPassword = () => {
       });
 
       if (error) {
-        setShowSnack({ flag: true, message: error, type: "error" });
+        console.error("Error in handlePasswordReset", error);
         return;
       }
-      console.log("updateUsersResponse: ", updateUsersResponse);
       if (updateUsersResponse && updateUsersResponse.data) {
-        console.log("====================================");
         setShowSnack({
           flag: true,
           message: "Password updated successfully!",

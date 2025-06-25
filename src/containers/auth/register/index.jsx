@@ -13,8 +13,10 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import theme from "../../../theme";
 import useRegister from "./useRegister";
+import Snackbar from "../../../shared/custom-snackbar";
+
 const Register = () => {
-  const { loading, error, register, handleSubmit, errors, handleRegister } =
+  const { loading, register, handleSubmit, errors, handleRegister, showSnack } =
     useRegister();
 
   return (
@@ -60,13 +62,6 @@ const Register = () => {
           >
             Register
           </Typography>
-
-          {/* Display API errors to the user */}
-          {error && (
-            <Typography color="error" sx={{ textAlign: "center" }}>
-              {error}
-            </Typography>
-          )}
 
           <Form
             onSubmit={handleSubmit(handleRegister)}
@@ -152,6 +147,12 @@ const Register = () => {
             </Stack>
           </Form>
         </Paper>
+        {console.log("-----------showSnack-----------", showSnack)}
+        <Snackbar
+          message={showSnack.message}
+          stateChange={showSnack.flag}
+          type={showSnack.type}
+        />
       </Box>
     </Container>
   );

@@ -13,17 +13,18 @@ import Form from "../../../shared/form";
 import FormGroup from "../../../shared/form-group";
 import { COLORS } from "../../../utils/colors";
 import useLogin from "./useLogin";
+import Snackbar from "../../../shared/custom-snackbar";
 
 const Login = () => {
   const {
     loading,
-    error,
     register,
     handleSubmit,
     errors,
     handleLogin,
     navigate,
     URLS,
+    showSnack,
   } = useLogin();
 
   return (
@@ -64,13 +65,6 @@ const Login = () => {
           >
             Login
           </Typography>
-
-          {/* Display error message if it exists */}
-          {error && (
-            <Typography color="error.main" sx={{ textAlign: "center" }}>
-              {error}
-            </Typography>
-          )}
 
           <Form
             onSubmit={handleSubmit(handleLogin)}
@@ -136,6 +130,12 @@ const Login = () => {
             </Stack>
           </Form>
         </Paper>
+        {console.log("-----------showSnack-----------", showSnack)}
+        <Snackbar
+          message={showSnack.message}
+          stateChange={showSnack.flag}
+          type={showSnack.type}
+        />
       </Box>
     </Container>
   );

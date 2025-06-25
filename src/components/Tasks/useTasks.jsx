@@ -13,15 +13,15 @@ import {
   Close as CloseIcon,
 } from "@mui/icons-material";
 import theme from "../../theme";
-import { setAllTasks } from "../../redux/slices/data.slice";
+import { fetchTasks, fetchUsers } from "../../redux/slices/data.slice";
 
 export const useTasks = () => {
   const dispatch = useDispatch();
-  const [tasks, setTasks] = useState([]);
+  const users = useSelector((state) => state.data.users);
+  const tasks = useSelector((state) => state.data.tasks);
   const [filteredTasks, setFilteredTasks] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [users, setUsers] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
@@ -43,42 +43,31 @@ export const useTasks = () => {
     resolver: yupResolver(taskSchema),
   });
 
-  const fetchTasks = useCallback(async () => {
-    try {
-      const [tasksResponse, usersResponse] = await Promise.all([
-        api.TASKS.get_all(),
-        api.USERS.get_all(),
-      ]);
-
-      const usersMap = usersResponse.data.reduce((acc, user) => {
-        acc[user.id] = `${user.firstName} ${user.lastName}`;
-        return acc;
-      }, {});
-      setUsers(usersMap);
-
-      if (!tasksResponse.data) return;
-      const tasksData = tasksResponse.data || [];
-      dispatch(setAllTasks(tasksData));
-      setTasks(
-        role === "admin"
-          ? tasksData
-          : tasksData.filter((task) => task.user_id === id)
-      );
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }, [dispatch, role, id]);
-
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    dispatch(fetchUsers());
+    dispatch(fetchTasks());
+  }, [dispatch]);
+
+  // const users__ = useMemo((arrOfUsers) => {
+  //   arrOfUsers.reduce((acc, user) => {
+  //     acc[user.id] = `${user.firstName} ${user.lastName}`;
+  //     return acc;
+  //   }, {});
+  // }, []);
+
+  const tasks__ = useMemo(
+    (role, tasks) => {
+      role === "admin" ? tasks : tasks.filter((task) => task.user_id === id);
+    },
+    [id]
+  );
 
   useEffect(() => {
     if (!searchTerm) {
       setFilteredTasks({});
       return;
     }
-    const matches = tasks.filter((task) =>
+    const matches = tasks__().filter((task) =>
       task.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
     const resultObject = matches.reduce((acc, task) => {
@@ -86,7 +75,7 @@ export const useTasks = () => {
       return acc;
     }, {});
     setFilteredTasks(resultObject);
-  }, [searchTerm, tasks]);
+  }, [searchTerm, tasks, tasks__]);
 
   const handleAddTask = async (data) => {
     try {

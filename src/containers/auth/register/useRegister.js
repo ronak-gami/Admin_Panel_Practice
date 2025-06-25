@@ -4,11 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { registerValidationSchema } from "../../../utils/helper";
 import { api } from "../../../api";
 import { URLS } from "../../../constants/urls";
-import useApi from "../../../hooks/use-api";
+import apiClient from "../../../hooks/use-api";
+import { useState } from "react";
 
 const useRegister = () => {
   const navigate = useNavigate();
-  const { error, loading, callApi } = useApi(api.USERS.create);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSnack, setShowSnack] = useState({
+    flag: false,
+    message: "",
+    type: "",
+  });
+  const userRegister = apiClient(api.USERS.create);
   const {
     register,
     handleSubmit,
@@ -17,28 +24,42 @@ const useRegister = () => {
     resolver: yupResolver(registerValidationSchema),
   });
 
-  const handleRegister = (formData) => {
-    callApi({
-      data: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        role: "user",
-      },
-    });
-    if (!error) {
-      navigate(URLS.LOGIN);
+  const handleRegister = async (formData) => {
+    setIsLoading(true);
+    try {
+      const { data: registerResponse, error } = await userRegister({
+        data: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          role: "user",
+        },
+      });
+      console.log("---------registerResponse---------", registerResponse);
+      console.log("error: ", error);
+      if (registerResponse?.data) {
+        setShowSnack({
+          flag: true,
+          message: "Registration Successful",
+          type: "success",
+        });
+        setTimeout(() => {
+          navigate(URLS.LOGIN);
+        }, 2500);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return {
-    loading,
-    error,
+    loading: isLoading,
     register,
     handleSubmit,
     errors,
     handleRegister,
+    showSnack,
   };
 };
 

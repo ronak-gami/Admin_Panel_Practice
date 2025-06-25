@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +8,18 @@ import { api } from "../../../api";
 import { setHeaders } from "../../../api/client";
 import { setUserData, setToken } from "../../../redux/slices/auth.slice";
 import { URLS } from "../../../constants/urls";
-import useApi from "../../../hooks/use-api";
+import apiClient from "../../../hooks/use-api";
 
 const useLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { data, error, loading, callApi } = useApi(api.AUTH.login);
-
+  const userLogin = apiClient(api.AUTH.login);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSnack, setShowSnack] = useState({
+    flag: false,
+    message: "",
+    type: "",
+  });
   const {
     register,
     handleSubmit,
@@ -22,29 +28,34 @@ const useLogin = () => {
     resolver: yupResolver(loginValidationSchema),
   });
 
-  const handleLogin = (formData) => {
-    callApi({ data: { email: formData.email, password: formData.password } });
-
-    if (data?.data?.user && data?.data?.token) {
-      localStorage.setItem("token", data?.data?.token);
-      dispatch(setUserData(data?.data?.user));
-      dispatch(setToken(data?.data?.token));
-      setHeaders("Authorization", `Bearer ${data?.data?.token}`);
-      navigate(URLS.DASHBOARD);
-    } else {
-      throw new Error("Invalid response from server. Please try again.");
+  const handleLogin = async (formData) => {
+    setIsLoading(true);
+    try {
+      const { data: loginResponse, error } = await userLogin({
+        data: { email: formData.email, password: formData.password },
+      });
+      if (loginResponse?.data?.user && loginResponse?.data?.token) {
+        localStorage.setItem("token", loginResponse?.data?.token);
+        dispatch(setUserData(loginResponse?.data?.user));
+        dispatch(setToken(loginResponse?.data?.token));
+        setHeaders("Authorization", `Bearer ${loginResponse?.data?.token}`);
+      } else if (error) {
+        setShowSnack({ flag: true, message: error, type: "error" });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return {
-    loading,
-    error,
+    loading: isLoading,
     register,
     handleSubmit,
     errors,
     handleLogin,
     navigate,
     URLS,
+    showSnack,
   };
 };
 
