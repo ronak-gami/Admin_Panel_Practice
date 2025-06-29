@@ -258,7 +258,7 @@ const Tasks = () => {
 
         <CustomTable
           columns={columns}
-          data={tasks} // renamed from paginatedTasks
+          data={tasks}
           tableName="tasks"
           order={order}
           orderBy={orderBy}

@@ -9,25 +9,27 @@ const initialState = {
   errorUsers: null,
   errorTasks: null,
 };
+
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await api.USERS.get_all();
       return response.data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.message || "An unknown error occurred");
     }
   }
 );
+
 export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
-  async ({ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await api.TASKS.get_all();
       return response.data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.message || "An unknown error occurred");
     }
   }
 );

@@ -12,7 +12,7 @@
       "firstName": "Ronak",
       "lastName": "Gami",
       "email": "rg@gmail.com",
-      "password": "Admin@123",
+      "password": "Test@123",
       "id": 101,
       "role": "user"
     },
@@ -111,7 +111,6 @@
     },
     {
       "priority": "Medium",
-      "search": "",
       "title": "2234t5y6u",
       "description": "2qwrgfth",
       "status": "approved",
@@ -130,8 +129,7 @@
     },
     {
       "priority": "Low",
-      "search": "",
-      "title": "h ello",
+      "title": "hello",
       "description": "123456789",
       "status": "approved",
       "createdAt": "2025-06-13T06:58:53.239Z",
@@ -140,7 +138,6 @@
     },
     {
       "priority": "High",
-      "search": "",
       "title": "hello",
       "description": "!234567RDKLM",
       "status": "approved",
@@ -168,7 +165,6 @@
     },
     {
       "priority": "High",
-      "search": "",
       "title": "Trips",
       "description": "Jnd to Amd",
       "status": "rejected",
@@ -187,7 +183,6 @@
     },
     {
       "priority": "Medium",
-      "search": "",
       "title": "fieu;gfilabwaeg",
       "description": "fahfkqbfkfqwf",
       "status": "rejected",
@@ -215,7 +210,6 @@
     },
     {
       "priority": "Medium",
-      "search": "",
       "title": "ronak gami",
       "description": "Test@123",
       "status": "rejected",
@@ -225,7 +219,6 @@
     },
     {
       "priority": "Medium",
-      "search": "",
       "title": "123456789",
       "description": "ASDFFGGHJKLDSZFXGCVJH",
       "status": "pending",
@@ -253,7 +246,6 @@
     },
     {
       "priority": "Medium",
-      "search": "",
       "title": "qwertyui",
       "description": "sfgrtgyljhnbgfvdefgjkljgfd",
       "status": "pending",
@@ -290,7 +282,6 @@
     },
     {
       "priority": "High",
-      "search": "",
       "title": "670634-6332pe;fh;",
       "description": "oufsb;owyrq'j",
       "status": "pending",
@@ -318,7 +309,6 @@
     },
     {
       "priority": "Medium",
-      "search": "",
       "title": "h[' f'ijawuba'ij",
       "description": "p\nomfobf baowhubf'",
       "status": "pending",

@@ -27,7 +27,7 @@ const useRegister = () => {
   const handleRegister = async (formData) => {
     setIsLoading(true);
     try {
-      const { data: registerResponse, error } = await userRegister({
+      const { data: registerResponse } = await userRegister({
         data: {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -36,8 +36,6 @@ const useRegister = () => {
           role: "user",
         },
       });
-      console.log("---------registerResponse---------", registerResponse);
-      console.log("error: ", error);
       if (registerResponse?.data) {
         setShowSnack({
           flag: true,

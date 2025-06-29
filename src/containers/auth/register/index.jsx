@@ -147,7 +147,6 @@ const Register = () => {
             </Stack>
           </Form>
         </Paper>
-        {console.log("-----------showSnack-----------", showSnack)}
         <Snackbar
           message={showSnack.message}
           stateChange={showSnack.flag}

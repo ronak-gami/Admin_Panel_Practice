@@ -17,8 +17,9 @@ import { fetchTasks, fetchUsers } from "../../redux/slices/data.slice";
 
 export const useTasks = () => {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.data.users);
-  const tasks = useSelector((state) => state.data.tasks);
+  const tasksFromStore = useSelector((state) => state.data.tasks);
+  const usersFromStore = useSelector((state) => state.data.users);
+  const { role, id } = useSelector((state) => state.auth.userData);
   const [filteredTasks, setFilteredTasks] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -33,7 +34,6 @@ export const useTasks = () => {
     status: [],
   });
 
-  const { role, id } = useSelector((state) => state.auth.userData);
   const {
     register,
     handleSubmit,
@@ -44,38 +44,40 @@ export const useTasks = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchUsers());
     dispatch(fetchTasks());
+    dispatch(fetchUsers());
   }, [dispatch]);
 
-  // const users__ = useMemo((arrOfUsers) => {
-  //   arrOfUsers.reduce((acc, user) => {
-  //     acc[user.id] = `${user.firstName} ${user.lastName}`;
-  //     return acc;
-  //   }, {});
-  // }, []);
+  const usersMap = useMemo(() => {
+    return usersFromStore.reduce((acc, user) => {
+      acc[user.id] = `${user.firstName} ${user.lastName}`;
+      return acc;
+    }, {});
+  }, [usersFromStore]);
 
-  const tasks__ = useMemo(
-    (role, tasks) => {
-      role === "admin" ? tasks : tasks.filter((task) => task.user_id === id);
-    },
-    [id]
-  );
+  const roleFilteredTasks = useMemo(() => {
+    if (role === "admin") {
+      return tasksFromStore;
+    }
+    return tasksFromStore.filter((task) => task.user_id === id);
+  }, [tasksFromStore, role, id]);
 
   useEffect(() => {
     if (!searchTerm) {
       setFilteredTasks({});
       return;
     }
-    const matches = tasks__().filter((task) =>
+
+    const matches = roleFilteredTasks.filter((task) =>
       task.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
     const resultObject = matches.reduce((acc, task) => {
       acc[task.id] = task;
       return acc;
     }, {});
     setFilteredTasks(resultObject);
-  }, [searchTerm, tasks, tasks__]);
+  }, [searchTerm, roleFilteredTasks]);
 
   const handleAddTask = async (data) => {
     try {
@@ -87,12 +89,41 @@ export const useTasks = () => {
           user_id: id,
         },
       });
-      await fetchTasks();
+      dispatch(fetchTasks());
       handleCloseModal();
     } catch (error) {
       console.error("Error adding task:", error);
     }
   };
+
+  const handleDelete = useCallback(
+    async (task) => {
+      try {
+        await api.TASKS.delete({ id: task.id });
+        dispatch(fetchTasks());
+      } catch (error) {
+        console.error("Error deleting task:", error);
+      }
+    },
+    [dispatch]
+  );
+
+  const handleActions = useCallback(
+    async (taskId, newStatus) => {
+      try {
+        const taskToUpdate = tasksFromStore.find((task) => task.id === taskId);
+        if (!taskToUpdate) return;
+        await api.TASKS.update({
+          id: taskId,
+          data: { ...taskToUpdate, status: newStatus },
+        });
+        dispatch(fetchTasks());
+      } catch (error) {
+        console.error("Error updating task status:", error);
+      }
+    },
+    [dispatch, tasksFromStore]
+  );
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -110,41 +141,8 @@ export const useTasks = () => {
   };
 
   const handleClearFilters = () => {
-    setFilters({
-      date: [],
-      priority: [],
-      status: [],
-    });
+    setFilters({ date: [], priority: [], status: [] });
   };
-
-  const handleDelete = useCallback(
-    async (task) => {
-      try {
-        await api.TASKS.delete({ id: task.id });
-        await fetchTasks();
-      } catch (error) {
-        console.error("Error deleting task:", error);
-      }
-    },
-    [fetchTasks]
-  );
-
-  const handleActions = useCallback(
-    async (taskId, newStatus) => {
-      try {
-        const taskToUpdate = tasks.find((task) => task.id === taskId);
-        if (!taskToUpdate) return;
-        await api.TASKS.update({
-          id: taskId,
-          data: { ...taskToUpdate, status: newStatus },
-        });
-        await fetchTasks();
-      } catch (error) {
-        console.error("Error updating task status:", error);
-      }
-    },
-    [fetchTasks, tasks]
-  );
 
   const handleFilterClick = (event) => {
     setFilterAnchorEl(event.currentTarget);
@@ -170,7 +168,9 @@ export const useTasks = () => {
   };
 
   const filteredAndSortedTasks = useMemo(() => {
-    let filteredData = searchTerm ? Object.values(filteredTasks) : [...tasks];
+    let filteredData = searchTerm
+      ? Object.values(filteredTasks)
+      : [...roleFilteredTasks];
 
     if (filters.date.length > 0) {
       const today = new Date();
@@ -205,7 +205,7 @@ export const useTasks = () => {
       );
 
     return movePendingTasksToTop(filteredData);
-  }, [searchTerm, filteredTasks, tasks, filters]);
+  }, [searchTerm, filteredTasks, roleFilteredTasks, filters]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -276,7 +276,7 @@ export const useTasks = () => {
         {
           id: "username",
           label: "Username",
-          render: ({ row }) => users[row.user_id] || "Unknown",
+          render: ({ row }) => usersMap[row.user_id] || "Unknown",
         },
         ...baseColumns,
         {
@@ -292,7 +292,7 @@ export const useTasks = () => {
       ];
     }
     return baseColumns;
-  }, [role, users, handleMenuOpen]);
+  }, [role, usersMap, handleMenuOpen]);
 
   const priorityOptions = [
     { value: "High", label: "High" },
