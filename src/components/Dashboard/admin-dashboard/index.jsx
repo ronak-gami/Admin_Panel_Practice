@@ -71,8 +71,8 @@ const AdminDashboard = () => {
             </ChartCard>
           </Grid>
           <Grid size={{ xs: 6, sm: 6, md: 4 }}>
-            <ChartCard title="Priority Trends (Last 7 Days)">
-              <PriorityTrendsLineChart />
+            <ChartCard title="Task Compilation Rate (Last 6 Months)">
+              <TasksCompilationLineChart />
             </ChartCard>
           </Grid>
         </Grid>
@@ -83,8 +83,8 @@ const AdminDashboard = () => {
             </ChartCard>
           </Grid>
           <Grid size={{ xs: 6, sm: 6, md: 6 }}>
-            <ChartCard title="Task Compilation Rate (Last 6 Months)">
-              <TasksCompilationLineChart />
+            <ChartCard title="Priority Trends (Last 7 Days)">
+              <PriorityTrendsLineChart />
             </ChartCard>
           </Grid>
         </Grid>

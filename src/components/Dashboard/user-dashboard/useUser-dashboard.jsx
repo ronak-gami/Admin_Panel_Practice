@@ -32,7 +32,7 @@ export const useUserDashboard = () => {
           data: [45, 115, 60],
           backgroundColor: COLORS.PRIMARY[50],
           borderColor: COLORS.PRIMARY[400],
-          borderWidth: { top: 2 },
+          borderWidth: { left: 2 },
           borderSkipped: false,
           barPercentage: 0.7,
           categoryPercentage: 0.7,
@@ -41,6 +41,7 @@ export const useUserDashboard = () => {
     };
 
     const options = {
+      indexAxis: "y",
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
@@ -49,15 +50,18 @@ export const useUserDashboard = () => {
       },
       scales: {
         x: {
+          beginAtZero: true,
           grid: { display: false },
           ticks: { color: COLORS.NEUTRAL[700] },
           border: { display: false },
         },
         y: {
           grid: { display: false },
-          ticks: { display: false },
+          ticks: {
+            display: true,
+            color: COLORS.NEUTRAL[700],
+          },
           border: { display: false },
-          beginAtZero: true,
         },
       },
     };

@@ -37,7 +37,9 @@ const SKY = {
 };
 
 const PINK = {
+  25: "#fff2f6",
   50: "#fde0e9",
+  75: "#fbd1da",
   100: "#fab3c9",
   200: "#f780a5",
   300: "#f44d81",
@@ -54,7 +56,9 @@ const PINK = {
 };
 
 const AMBER = {
+  25: "#fffaf0",
   50: "#fff7e6",
+  75: "#fff0d9",
   100: "#ffedc0",
   200: "#ffe199",
   300: "#ffd472",
@@ -89,7 +93,9 @@ const GRAY = {
 };
 
 const INDIGO = {
+  25: "#f7f7ff",
   50: "#ecebff",
+  75: "#dedcff",
   100: "#c8c6ff",
   200: "#a3a1ff",
   300: "#7f7cff",
@@ -106,10 +112,10 @@ const INDIGO = {
 };
 
 export const COLORS = {
-  PRIMARY: SKY,
+  PRIMARY: INDIGO,
   SECONDARY: TEAL,
   ERROR: PINK,
   WARNING: AMBER,
   NEUTRAL: GRAY,
-  ACCENT: INDIGO,
+  ACCENT: SKY,
 };

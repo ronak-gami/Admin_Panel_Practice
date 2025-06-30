@@ -45,7 +45,6 @@ const Login = () => {
         }}
       >
         <Paper
-          elevation={12}
           sx={{
             padding: 4,
             maxWidth: 500,
@@ -55,6 +54,7 @@ const Login = () => {
             width: "100%",
             borderRadius: 3,
             gap: 2,
+            border: `1px solid ${COLORS.NEUTRAL[400]}`,
           }}
         >
           <Typography

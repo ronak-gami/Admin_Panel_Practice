@@ -14,6 +14,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import theme from "../../../theme";
 import useRegister from "./useRegister";
 import Snackbar from "../../../shared/custom-snackbar";
+import { COLORS } from "../../../utils/colors";
 
 const Register = () => {
   const { loading, register, handleSubmit, errors, handleRegister, showSnack } =
@@ -38,7 +39,6 @@ const Register = () => {
         }}
       >
         <Paper
-          elevation={12}
           sx={{
             padding: 4,
             maxWidth: 500,
@@ -48,6 +48,7 @@ const Register = () => {
             width: "100%",
             borderRadius: 3,
             gap: 2,
+            border: `1px solid ${COLORS.NEUTRAL[400]}`,
           }}
         >
           <Typography

@@ -14,6 +14,7 @@ import FormGroup from "../../../shared/form-group";
 import theme from "../../../theme";
 import useForgotPassword from "./useForgotPassword";
 import Snackbar from "../../../shared/custom-snackbar";
+import { COLORS } from "../../../utils/colors";
 
 const ForgotPassword = () => {
   const {
@@ -48,7 +49,6 @@ const ForgotPassword = () => {
         }}
       >
         <Paper
-          elevation={12}
           sx={{
             padding: 4,
             maxWidth: 500,
@@ -58,6 +58,7 @@ const ForgotPassword = () => {
             width: "100%",
             borderRadius: 3,
             gap: 2,
+            border: `1px solid ${COLORS.NEUTRAL[400]}`,
           }}
         >
           <Typography
