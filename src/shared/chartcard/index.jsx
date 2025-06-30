@@ -11,25 +11,35 @@ const ChartCard = ({ title, value, subtitle, percentage, children }) => (
       boxSizing: "border-box",
     }}
   >
-    <Typography variant="body1" color="text.secondary">
-      {title}
-    </Typography>
-    <Typography variant="h3" component="h2" sx={{ my: 1, fontWeight: "bold" }}>
-      {value}
-    </Typography>
-    <Box sx={{ mb: 3 }}>
-      <Typography variant="body2" component="span" color="text.secondary">
-        {subtitle}
+    {title && (
+      <Typography variant="body1" color="text.secondary">
+        {title || null}
       </Typography>
+    )}
+    {value && (
       <Typography
-        variant="body2"
-        component="span"
-        sx={{ color: "success.main", fontWeight: "bold", ml: 1 }}
+        variant="h3"
+        component="h2"
+        sx={{ my: 1, fontWeight: "bold" }}
       >
-        {percentage}
+        {value || null}
       </Typography>
-    </Box>
-    <Box sx={{ height: "150px" }}>{children}</Box>
+    )}
+    {subtitle && percentage && (
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="body2" component="span" color="text.secondary">
+          {subtitle || null}
+        </Typography>
+        <Typography
+          variant="body2"
+          component="span"
+          sx={{ color: "success.main", fontWeight: "bold", ml: 1 }}
+        >
+          {percentage || null}
+        </Typography>
+      </Box>
+    )}
+    <Box sx={{ height: "250px" }}>{children}</Box>
   </Paper>
 );
 

@@ -1,5 +1,5 @@
 import { Box, Typography, Paper, Grid } from "@mui/material";
-import { Pie, Line } from "react-chartjs-2";
+import ChartCard from "../../../shared/chartcard";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -12,7 +12,7 @@ import {
 } from "chart.js";
 import { useAdminDashboard } from "./useAdmin-dashboard";
 import CustomHeader from "../../../shared/custom-header";
-import theme from "../../../theme";
+import { COLORS } from "../../../utils/colors";
 
 ChartJS.register(
   ArcElement,
@@ -26,144 +26,66 @@ ChartJS.register(
 
 const AdminDashboard = () => {
   const {
-    statusChartData,
-    priorityChartData,
-    chartOptions,
-    lineChartData,
-    lineChartOptions,
+    summaryStats,
+    TasksPieChartByStatus,
+    TasksPieChartByPriority,
+    StatusTrendsLineChart,
+    PriorityTrendsLineChart,
+    TasksCompilationLineChart,
   } = useAdminDashboard();
 
   return (
     <>
       <CustomHeader />
-      <Box sx={{ p: 3 }}>
-        <Typography
-          variant="h6"
-          sx={{
-            color: theme.palette.neutral[800],
-            mb: 2,
-          }}
-        >
-          Current Task Distribution
-        </Typography>
-        <Grid
-          container
-          rowSpacing={1}
-          columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          sx={{ mb: 4 }}
-        >
-          <Grid size={6}>
-            <Paper
-              elevation={6}
-              sx={{
-                height: 420,
-                p: 3,
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            >
-              <Typography
-                variant="h6"
-                align="center"
-                color={theme.palette.neutral[800]}
+      <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+        <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mb: 4 }}>
+          {summaryStats.map((stat) => (
+            <Grid size={{ xs: 6, sm: 6, md: 3 }} key={stat.label}>
+              <Paper
+                sx={{
+                  p: 2,
+                  borderRadius: 3,
+                  border: `1px solid ${COLORS.NEUTRAL[400]}`,
+                  textAlign: "center",
+                }}
               >
-                Tasks by Status
-              </Typography>
-              <Box sx={{ flexGrow: 1 }}>
-                <Pie data={statusChartData} options={chartOptions} />
-              </Box>
-            </Paper>
+                <Typography variant="body1" color={COLORS.NEUTRAL[700]}>
+                  {stat.label}
+                </Typography>
+                <Typography variant="h6" color={COLORS.PRIMARY[500]}>
+                  {stat.value}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+        <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mb: 4 }}>
+          <Grid size={{ xs: 6, sm: 6, md: 4 }}>
+            <ChartCard title="Tasks by Status">
+              <TasksPieChartByStatus />
+            </ChartCard>
           </Grid>
-
-          <Grid size={6}>
-            <Paper
-              elevation={6}
-              sx={{
-                height: 420,
-                p: 3,
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            >
-              <Typography
-                variant="h6"
-                align="center"
-                color={theme.palette.neutral[800]}
-              >
-                Tasks by Priority
-              </Typography>
-              <Box sx={{ flexGrow: 1 }}>
-                <Pie data={priorityChartData} options={chartOptions} />
-              </Box>
-            </Paper>
+          <Grid size={{ xs: 6, sm: 6, md: 4 }}>
+            <ChartCard title="Tasks by Priority">
+              <TasksPieChartByPriority />
+            </ChartCard>
+          </Grid>
+          <Grid size={{ xs: 6, sm: 6, md: 4 }}>
+            <ChartCard title="Priority Trends (Last 7 Days)">
+              <PriorityTrendsLineChart />
+            </ChartCard>
           </Grid>
         </Grid>
-        <Typography
-          variant="h6"
-          sx={{
-            color: theme.palette.neutral[800],
-            mb: 2,
-          }}
-        >
-          Task Trends
-        </Typography>
-        <Grid
-          container
-          rowSpacing={1}
-          columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          sx={{ mb: 4 }}
-        >
-          <Grid size={6}>
-            <Paper
-              elevation={6}
-              sx={{
-                height: 420,
-                p: 3,
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            >
-              <Typography
-                variant="h6"
-                align="center"
-                color={theme.palette.neutral[800]}
-              >
-                Status Trends (Last 7 Days)
-              </Typography>
-              <Box sx={{ flexGrow: 1 }}>
-                <Line data={lineChartData.status} options={lineChartOptions} />
-              </Box>
-            </Paper>
+        <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mb: 4 }}>
+          <Grid size={{ xs: 6, sm: 6, md: 6 }}>
+            <ChartCard title="Status Trends (Last 7 Days)">
+              <StatusTrendsLineChart />
+            </ChartCard>
           </Grid>
-
-          <Grid size={6}>
-            <Paper
-              elevation={6}
-              sx={{
-                height: 420,
-                p: 3,
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            >
-              <Typography
-                variant="h6"
-                align="center"
-                color={theme.palette.neutral[800]}
-              >
-                Priority Trends (Last 7 Days)
-              </Typography>
-              <Box sx={{ flexGrow: 1 }}>
-                <Line
-                  data={lineChartData.priority}
-                  options={lineChartOptions}
-                />
-              </Box>
-            </Paper>
+          <Grid size={{ xs: 6, sm: 6, md: 6 }}>
+            <ChartCard title="Task Compilation Rate (Last 6 Months)">
+              <TasksCompilationLineChart />
+            </ChartCard>
           </Grid>
         </Grid>
       </Box>

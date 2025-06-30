@@ -103,6 +103,7 @@ export const useUserDashboard = () => {
 
     return <Line options={options} data={data} />;
   };
+
   const TeamPerformanceChart = () => {
     const data = {
       labels: ["Team A", "Team B", "Team C"],

@@ -56,7 +56,7 @@ const useRoutes = () => {
         roles: ["admin", "user"],
       },
     ],
-    []
+    [user?.role]
   );
 
   const authRoutes = useMemo(

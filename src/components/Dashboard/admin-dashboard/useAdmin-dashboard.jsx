@@ -1,24 +1,33 @@
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import { COLORS } from "../../../utils/colors";
+import { Line, Pie } from "react-chartjs-2";
 
 export const useAdminDashboard = () => {
   const tasks = useSelector((state) => state.data.tasks);
 
-  const statusChartData = useMemo(() => {
-    const statusCounts = tasks.reduce((acc, task) => {
-      acc[task.status] = (acc[task.status] || 0) + 1;
-      return acc;
-    }, {});
+  const summaryStats = useMemo(() => {
+    const total = tasks.length;
+    const completed = tasks.filter((task) => task.status === "approved").length;
+    const pending = tasks.filter((task) => task.status === "pending").length;
+    return [
+      { label: "Total Tasks", value: total },
+      { label: "Completed Tasks", value: completed },
+      { label: "Pending Tasks", value: pending },
+      { label: "User Activity", value: "Active" },
+    ];
+  }, [tasks]);
 
-    return {
+  // Memoized data for charts
+  const statusChartData = useMemo(
+    () => ({
       labels: ["Pending", "Approved", "Rejected"],
       datasets: [
         {
           data: [
-            statusCounts.pending || 0,
-            statusCounts.approved || 0,
-            statusCounts.rejected || 0,
+            tasks.filter((t) => t.status === "pending").length,
+            tasks.filter((t) => t.status === "approved").length,
+            tasks.filter((t) => t.status === "rejected").length,
           ],
           backgroundColor: [
             COLORS.WARNING[100],
@@ -33,43 +42,38 @@ export const useAdminDashboard = () => {
           borderWidth: 1,
         },
       ],
-    };
-  }, [tasks]);
+    }),
+    [tasks]
+  );
 
-  const priorityChartData = useMemo(() => {
-    const priorityCounts = tasks.reduce((acc, task) => {
-      acc[task.priority.toLowerCase()] =
-        (acc[task.priority.toLowerCase()] || 0) + 1;
-      return acc;
-    }, {});
-
-    return {
+  const priorityChartData = useMemo(
+    () => ({
       labels: ["High", "Medium", "Low"],
       datasets: [
         {
           data: [
-            priorityCounts.high || 0,
-            priorityCounts.medium || 0,
-            priorityCounts.low || 0,
+            tasks.filter((t) => t.priority.toLowerCase() === "high").length,
+            tasks.filter((t) => t.priority.toLowerCase() === "medium").length,
+            tasks.filter((t) => t.priority.toLowerCase() === "low").length,
           ],
           backgroundColor: [
+            COLORS.ERROR[100],
             COLORS.WARNING[100],
             COLORS.PRIMARY[100],
-            COLORS.ERROR[100],
           ],
           borderColor: [
+            COLORS.ERROR[600],
             COLORS.WARNING[600],
             COLORS.PRIMARY[600],
-            COLORS.ERROR[600],
           ],
           borderWidth: 1,
         },
       ],
-    };
-  }, [tasks]);
+    }),
+    [tasks]
+  );
 
   const lineChartData = useMemo(() => {
-    // Group tasks by date and count status/priority
     const groupedData = tasks.reduce((acc, task) => {
       const date = new Date(task.createdAt).toLocaleDateString();
       if (!acc[date]) {
@@ -78,13 +82,16 @@ export const useAdminDashboard = () => {
           priority: { high: 0, medium: 0, low: 0 },
         };
       }
-      acc[date].status[task.status.toLowerCase()]++;
-      acc[date].priority[task.priority.toLowerCase()]++;
+      acc[date].status[task.status.toLowerCase()] =
+        (acc[date].status[task.status.toLowerCase()] || 0) + 1;
+      acc[date].priority[task.priority.toLowerCase()] =
+        (acc[date].priority[task.priority.toLowerCase()] || 0) + 1;
       return acc;
     }, {});
 
-    // Get last 7 days
-    const dates = Object.keys(groupedData).sort().slice(-7);
+    const dates = Object.keys(groupedData)
+      .sort((a, b) => new Date(a) - new Date(b))
+      .slice(-7);
 
     return {
       status: {
@@ -142,39 +149,84 @@ export const useAdminDashboard = () => {
     };
   }, [tasks]);
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-      },
-    },
+  const TasksPieChartByStatus = () => {
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: "bottom" } },
+    };
+    return <Pie data={statusChartData} options={options} />;
   };
 
-  const lineChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          stepSize: 1,
+  const TasksPieChartByPriority = () => {
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: "bottom" } },
+    };
+    return <Pie data={priorityChartData} options={options} />;
+  };
+
+  const StatusTrendsLineChart = () => {
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: "bottom" } },
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+    };
+    return <Line data={lineChartData.status} options={options} />;
+  };
+
+  const PriorityTrendsLineChart = () => {
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: "bottom" } },
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+    };
+    return <Line data={lineChartData.priority} options={options} />;
+  };
+
+  const TasksCompilationLineChart = () => {
+    const data = {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      datasets: [
+        {
+          data: [65, 75, 60, 81, 70, 95, 78],
+          fill: true,
+          backgroundColor: COLORS.PRIMARY[50],
+          borderColor: COLORS.PRIMARY[400],
+          tension: 0.4,
+          pointRadius: 0,
+        },
+      ],
+    };
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: true } },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: COLORS.NEUTRAL[700] },
+          border: { display: false },
+        },
+        y: {
+          grid: { display: false },
+          ticks: { display: false },
+          border: { display: false },
         },
       },
-    },
+    };
+    return <Line options={options} data={data} />;
   };
 
   return {
-    statusChartData,
-    priorityChartData,
-    chartOptions,
-    lineChartData,
-    lineChartOptions,
+    summaryStats,
+    TasksPieChartByStatus,
+    TasksPieChartByPriority,
+    StatusTrendsLineChart,
+    PriorityTrendsLineChart,
+    TasksCompilationLineChart,
   };
 };
