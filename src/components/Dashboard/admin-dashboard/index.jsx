@@ -10,9 +10,9 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
-import CustomHeader from "../../shared/custom-header";
-import theme from "../../theme";
-import { useDashboard } from "./useDashboard";
+import { useAdminDashboard } from "./useAdmin-dashboard";
+import CustomHeader from "../../../shared/custom-header";
+import theme from "../../../theme";
 
 ChartJS.register(
   ArcElement,
@@ -24,20 +24,19 @@ ChartJS.register(
   LineElement
 );
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   const {
     statusChartData,
     priorityChartData,
     chartOptions,
     lineChartData,
     lineChartOptions,
-  } = useDashboard();
+  } = useAdminDashboard();
 
   return (
     <>
       <CustomHeader />
-      <Box sx={{ padding: 3 }}>
-        {/* Pie Charts Container */}
+      <Box sx={{ p: 3 }}>
         <Typography
           variant="h6"
           sx={{
@@ -101,7 +100,6 @@ const Dashboard = () => {
             </Paper>
           </Grid>
         </Grid>
-
         <Typography
           variant="h6"
           sx={{
@@ -111,7 +109,6 @@ const Dashboard = () => {
         >
           Task Trends
         </Typography>
-
         <Grid
           container
           rowSpacing={1}
@@ -174,4 +171,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

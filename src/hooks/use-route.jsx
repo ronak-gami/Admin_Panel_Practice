@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import { URLS } from "../constants/urls";
 import Register from "../containers/auth/register";
 import { useSelector } from "react-redux";
-import Dashboard from "../components/Dashboard";
+import AdminDashboard from "../components/Dashboard/admin-dashboard";
+import UserDashboard from "../components/Dashboard/user-dashboard";
 import Users from "../components/Users";
 import Tasks from "../components/Tasks";
 import ForgotPassword from "../containers/auth/forgotpassword";
@@ -12,7 +13,6 @@ const useRoutes = () => {
   const user = useSelector((state) => {
     return state.auth.userData;
   });
-
   const allRoutes = useMemo(
     () => [
       {
@@ -36,7 +36,8 @@ const useRoutes = () => {
       {
         id: "dashboard",
         path: URLS.DASHBOARD,
-        element: <Dashboard />,
+        element:
+          user?.role === "admin" ? <AdminDashboard /> : <UserDashboard />,
         isPrivate: true,
         roles: ["user", "admin"],
       },

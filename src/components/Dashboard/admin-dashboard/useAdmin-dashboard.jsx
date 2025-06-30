@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import { COLORS } from "../../utils/colors";
 import { useMemo } from "react";
+import { COLORS } from "../../../utils/colors";
 
-export const useDashboard = () => {
+export const useAdminDashboard = () => {
   const tasks = useSelector((state) => state.data.tasks);
 
   const statusChartData = useMemo(() => {
