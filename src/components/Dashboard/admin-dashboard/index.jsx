@@ -1,28 +1,7 @@
 import { Box, Typography, Paper, Grid } from "@mui/material";
-import ChartCard from "../../../shared/chartcard";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-} from "chart.js";
 import { useAdminDashboard } from "./useAdmin-dashboard";
 import CustomHeader from "../../../shared/custom-header";
 import { COLORS } from "../../../utils/colors";
-
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement
-);
 
 const AdminDashboard = () => {
   const {
@@ -61,31 +40,21 @@ const AdminDashboard = () => {
         </Grid>
         <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mb: 4 }}>
           <Grid size={{ xs: 6, sm: 6, md: 4 }}>
-            <ChartCard title="Tasks by Status">
-              <TasksPieChartByStatus />
-            </ChartCard>
+            <TasksPieChartByStatus />
           </Grid>
           <Grid size={{ xs: 6, sm: 6, md: 4 }}>
-            <ChartCard title="Tasks by Priority">
-              <TasksPieChartByPriority />
-            </ChartCard>
+            <TasksPieChartByPriority />
           </Grid>
           <Grid size={{ xs: 6, sm: 6, md: 4 }}>
-            <ChartCard title="Task Compilation Rate (Last 6 Months)">
-              <TasksCompilationLineChart />
-            </ChartCard>
+            <TasksCompilationLineChart />
           </Grid>
         </Grid>
         <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} sx={{ mb: 4 }}>
           <Grid size={{ xs: 6, sm: 6, md: 6 }}>
-            <ChartCard title="Status Trends (Last 7 Days)">
-              <StatusTrendsLineChart />
-            </ChartCard>
+            <StatusTrendsLineChart />
           </Grid>
           <Grid size={{ xs: 6, sm: 6, md: 6 }}>
-            <ChartCard title="Priority Trends (Last 7 Days)">
-              <PriorityTrendsLineChart />
-            </ChartCard>
+            <PriorityTrendsLineChart />
           </Grid>
         </Grid>
       </Box>

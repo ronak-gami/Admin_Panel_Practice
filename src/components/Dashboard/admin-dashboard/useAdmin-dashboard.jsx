@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import { COLORS } from "../../../utils/colors";
-import { Line, Pie } from "react-chartjs-2";
+import { ChartRenderer } from "../../../charts/chart-renderer";
 
 export const useAdminDashboard = () => {
   const tasks = useSelector((state) => state.data.tasks);
@@ -18,7 +18,6 @@ export const useAdminDashboard = () => {
     ];
   }, [tasks]);
 
-  // Memoized data for charts
   const statusChartData = useMemo(
     () => ({
       labels: ["Pending", "Approved", "Rejected"],
@@ -82,10 +81,8 @@ export const useAdminDashboard = () => {
           priority: { high: 0, medium: 0, low: 0 },
         };
       }
-      acc[date].status[task.status.toLowerCase()] =
-        (acc[date].status[task.status.toLowerCase()] || 0) + 1;
-      acc[date].priority[task.priority.toLowerCase()] =
-        (acc[date].priority[task.priority.toLowerCase()] || 0) + 1;
+      acc[date].status[task.status.toLowerCase()]++;
+      acc[date].priority[task.priority.toLowerCase()]++;
       return acc;
     }, {});
 
@@ -99,21 +96,21 @@ export const useAdminDashboard = () => {
         datasets: [
           {
             label: "Pending",
-            data: dates.map((date) => groupedData[date]?.status.pending || 0),
+            data: dates.map((d) => groupedData[d]?.status.pending || 0),
             borderColor: COLORS.WARNING[600],
             backgroundColor: COLORS.WARNING[100],
             tension: 0.4,
           },
           {
             label: "Approved",
-            data: dates.map((date) => groupedData[date]?.status.approved || 0),
+            data: dates.map((d) => groupedData[d]?.status.approved || 0),
             borderColor: COLORS.PRIMARY[600],
             backgroundColor: COLORS.PRIMARY[100],
             tension: 0.4,
           },
           {
             label: "Rejected",
-            data: dates.map((date) => groupedData[date]?.status.rejected || 0),
+            data: dates.map((d) => groupedData[d]?.status.rejected || 0),
             borderColor: COLORS.ERROR[600],
             backgroundColor: COLORS.ERROR[100],
             tension: 0.4,
@@ -125,21 +122,21 @@ export const useAdminDashboard = () => {
         datasets: [
           {
             label: "High",
-            data: dates.map((date) => groupedData[date]?.priority.high || 0),
+            data: dates.map((d) => groupedData[d]?.priority.high || 0),
             borderColor: COLORS.ERROR[600],
             backgroundColor: COLORS.ERROR[100],
             tension: 0.4,
           },
           {
             label: "Medium",
-            data: dates.map((date) => groupedData[date]?.priority.medium || 0),
+            data: dates.map((d) => groupedData[d]?.priority.medium || 0),
             borderColor: COLORS.WARNING[600],
             backgroundColor: COLORS.WARNING[100],
             tension: 0.4,
           },
           {
             label: "Low",
-            data: dates.map((date) => groupedData[date]?.priority.low || 0),
+            data: dates.map((d) => groupedData[d]?.priority.low || 0),
             borderColor: COLORS.PRIMARY[600],
             backgroundColor: COLORS.PRIMARY[100],
             tension: 0.4,
@@ -154,8 +151,19 @@ export const useAdminDashboard = () => {
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { position: "bottom" } },
+      scales: {
+        x: { display: false },
+        y: { display: false },
+      },
     };
-    return <Pie data={statusChartData} options={options} />;
+    return (
+      <ChartRenderer
+        type="pie"
+        data={statusChartData}
+        options={options}
+        title="Tasks by Status"
+      />
+    );
   };
 
   const TasksPieChartByPriority = () => {
@@ -163,8 +171,19 @@ export const useAdminDashboard = () => {
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { position: "bottom" } },
+      scales: {
+        x: { display: false },
+        y: { display: false },
+      },
     };
-    return <Pie data={priorityChartData} options={options} />;
+    return (
+      <ChartRenderer
+        type="pie"
+        data={priorityChartData}
+        options={options}
+        title="Tasks by Priority"
+      />
+    );
   };
 
   const StatusTrendsLineChart = () => {
@@ -172,9 +191,21 @@ export const useAdminDashboard = () => {
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { position: "bottom" } },
-      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 },
+        },
+      },
     };
-    return <Line data={lineChartData.status} options={options} />;
+    return (
+      <ChartRenderer
+        type="line"
+        data={lineChartData.status}
+        options={options}
+        title="Status Trends (Last 7 Days)"
+      />
+    );
   };
 
   const PriorityTrendsLineChart = () => {
@@ -182,9 +213,21 @@ export const useAdminDashboard = () => {
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { position: "bottom" } },
-      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 },
+        },
+      },
     };
-    return <Line data={lineChartData.priority} options={options} />;
+    return (
+      <ChartRenderer
+        type="line"
+        data={lineChartData.priority}
+        options={options}
+        title="Priority Trends (Last 7 Days)"
+      />
+    );
   };
 
   const TasksCompilationLineChart = () => {
@@ -201,10 +244,14 @@ export const useAdminDashboard = () => {
         },
       ],
     };
+
     const options = {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { enabled: true } },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true },
+      },
       scales: {
         x: {
           grid: { display: false },
@@ -218,7 +265,15 @@ export const useAdminDashboard = () => {
         },
       },
     };
-    return <Line options={options} data={data} />;
+
+    return (
+      <ChartRenderer
+        type="line"
+        data={data}
+        options={options}
+        title="Task Compilation Rate (Last 6 Months)"
+      />
+    );
   };
 
   return {

@@ -1,6 +1,5 @@
 import CustomHeader from "../../../shared/custom-header";
 import { Box, Grid } from "@mui/material";
-import ChartCard from "../../../shared/chartcard";
 import { useUserDashboard } from "./useUser-dashboard";
 
 const UserDashboard = () => {
@@ -18,34 +17,13 @@ const UserDashboard = () => {
           sx={{ mb: 4 }}
         >
           <Grid size={6}>
-            <ChartCard
-              title="Tasks by Status"
-              value="120"
-              subtitle="This Month"
-              percentage="+10%"
-            >
-              <StatusBarChart />
-            </ChartCard>
+            <StatusBarChart />
           </Grid>
           <Grid size={6}>
-            <ChartCard
-              title="Tasks Over Time"
-              value="30"
-              subtitle="Last 6 Months"
-              percentage="+5%"
-            >
-              <TasksLineChart />
-            </ChartCard>
+            <TasksLineChart />
           </Grid>
         </Grid>
-        <ChartCard
-          title="Tasks Over Time"
-          value="30"
-          subtitle="Last 6 Months"
-          percentage="+5%"
-        >
-          <TeamPerformanceChart />
-        </ChartCard>
+        <TeamPerformanceChart />
       </Box>
     </>
   );

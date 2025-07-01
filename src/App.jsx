@@ -5,6 +5,7 @@ import store, { persistor } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
+import { ChartProvider } from "./charts/chart-provider";
 
 const App = () => {
   return (
@@ -12,7 +13,9 @@ const App = () => {
       <BrowserRouter>
         <PersistGate loading={null} persistor={persistor}>
           <ThemeProvider theme={theme}>
-            <Routing />
+            <ChartProvider>
+              <Routing />
+            </ChartProvider>
           </ThemeProvider>
         </PersistGate>
       </BrowserRouter>
