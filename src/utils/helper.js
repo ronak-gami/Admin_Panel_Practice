@@ -51,6 +51,18 @@ export const passwordSchema = yup.object().shape({
     .required("Confirm Password is required"),
 });
 
+export const assignTaskSchema = yup.object().shape({
+  title: yup.string().required("Title is required"),
+  description: yup.string().required("Description is required"),
+  priority: yup.string().required("Priority is required"),
+  // assignedTo: yup.string().required("Assigned user is required"),
+  // dueDate: yup
+  //   .date()
+  //   .typeError("Due date must be a valid date")
+  //   .min(new Date(), "Due date cannot be in the past")
+  //   .required("Due date is required"),
+});
+
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -66,3 +78,9 @@ export const getComparator = (order, orderBy) => {
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 };
+
+export const priorityOptions = [
+  { value: "High", label: "High" },
+  { value: "Medium", label: "Medium" },
+  { value: "Low", label: "Low" },
+];

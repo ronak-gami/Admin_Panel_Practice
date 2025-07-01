@@ -1,10 +1,16 @@
-import { useSelector } from "react-redux";
-import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo } from "react";
 import { COLORS } from "../../../utils/colors";
 import { ChartRenderer } from "../../../charts/chart-renderer";
+import { fetchTasks } from "../../../redux/slices/data.slice";
 
 export const useAdminDashboard = () => {
+  const dispatch = useDispatch();
   const tasks = useSelector((state) => state.data.tasks);
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);
 
   const summaryStats = useMemo(() => {
     const total = tasks.length;

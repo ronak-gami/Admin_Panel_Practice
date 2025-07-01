@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../api";
-import { taskSchema } from "../../utils/helper";
+import { priorityOptions, taskSchema } from "../../utils/helper";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { Chip, IconButton } from "@mui/material";
 import { COLORS } from "../../utils/colors";
@@ -298,12 +298,6 @@ export const useTasks = () => {
     }
     return baseColumns;
   }, [role, usersMap, handleMenuOpen]);
-
-  const priorityOptions = [
-    { value: "High", label: "High" },
-    { value: "Medium", label: "Medium" },
-    { value: "Low", label: "Low" },
-  ];
 
   const menuOptions = useMemo(() => {
     const options = [];

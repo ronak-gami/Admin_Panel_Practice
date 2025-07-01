@@ -21,7 +21,7 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  AssignmentTurnedIn as AssignIcon,
+  AssignmentOutlined as AssignIcon,
 } from "@mui/icons-material";
 import { COLORS } from "../utils/colors";
 import { URLS } from "../constants/urls";
@@ -48,6 +48,11 @@ const menuItems_Admin = [
     title: "Tasks",
     path: URLS.TASKS,
     icon: <TaskIcon />,
+  },
+  {
+    title: "Assign Tasks to Users",
+    path: URLS.ASSIGN_TASKS,
+    icon: <AssignIcon />,
   },
 ];
 
@@ -243,39 +248,6 @@ const DashboardLayout = () => {
           ))}
         </List>
         <Box sx={{ flexGrow: 1 }} />
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => console.log("assign tasks clicked")}
-            sx={{
-              justifyContent: isDrawerOpen ? "initial" : "center",
-              "&:hover": {
-                backgroundColor: "transparent",
-                cursor: "pointer",
-              },
-              "&.Mui-focusVisible": {
-                backgroundColor: "transparent",
-              },
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                justifyContent: "center",
-                color: COLORS.PRIMARY.main,
-              }}
-            >
-              <AssignIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Assign Tasks to Users"
-              sx={{
-                opacity: isDrawerOpen ? 1 : 0,
-                "& .MuiListItemText-primary": {
-                  color: COLORS.PRIMARY.main,
-                },
-              }}
-            />
-          </ListItemButton>
-        </ListItem>
         <Box sx={{ height: "1px", backgroundColor: COLORS.NEUTRAL[400] }} />
         <ListItem disablePadding>
           <ListItemButton
