@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
-import { Box, Paper, Typography, Alert, useTheme } from "@mui/material";
+import { Box, Paper, Typography, Alert } from "@mui/material";
 import { Bar, Line, Pie, Doughnut, Radar } from "react-chartjs-2";
+import { COLORS } from "../utils/colors";
 
 export const ChartRenderer = ({
   type,
@@ -11,8 +12,6 @@ export const ChartRenderer = ({
   subtitle,
   percentage,
 }) => {
-  const theme = useTheme();
-
   const defaultOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -20,43 +19,28 @@ export const ChartRenderer = ({
       legend: {
         position: "top",
         labels: {
-          color: theme.palette.text.secondary,
-          font: {
-            family: theme.typography.fontFamily,
-          },
+          color: COLORS.NEUTRAL[700],
         },
       },
       tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        titleFont: {
-          family: theme.typography.fontFamily,
-        },
-        bodyFont: {
-          family: theme.typography.fontFamily,
-        },
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
       },
     },
     scales: {
       x: {
         ticks: {
-          color: theme.palette.text.secondary,
-          font: {
-            family: theme.typography.fontFamily,
-          },
+          color: COLORS.NEUTRAL[700],
         },
         grid: {
-          color: theme.palette.divider,
+          color: COLORS.NEUTRAL[200],
         },
       },
       y: {
         ticks: {
-          color: theme.palette.text.secondary,
-          font: {
-            family: theme.typography.fontFamily,
-          },
+          color: COLORS.NEUTRAL[700],
         },
         grid: {
-          color: theme.palette.divider,
+          color: COLORS.NEUTRAL[200],
         },
       },
     },
@@ -101,13 +85,13 @@ export const ChartRenderer = ({
       sx={{
         p: 3,
         borderRadius: 3,
-        border: `1px solid ${theme.palette.divider}`,
+        border: `1px solid ${COLORS.NEUTRAL[400]}`,
         width: "100%",
         boxSizing: "border-box",
       }}
     >
       {title && (
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body1" color="text.primary">
           {title}
         </Typography>
       )}
@@ -122,7 +106,7 @@ export const ChartRenderer = ({
       )}
       {subtitle && percentage && (
         <Box sx={{ mb: 3 }}>
-          <Typography variant="body2" component="span" color="text.secondary">
+          <Typography variant="body" component="span" color="text.secondary">
             {subtitle}
           </Typography>
           <Typography

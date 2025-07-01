@@ -28,7 +28,7 @@ const AdminDashboard = () => {
                   textAlign: "center",
                 }}
               >
-                <Typography variant="body1" color={COLORS.NEUTRAL[700]}>
+                <Typography variant="body1" color="text.primary">
                   {stat.label}
                 </Typography>
                 <Typography variant="h6" color={COLORS.PRIMARY[500]}>

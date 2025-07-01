@@ -6,6 +6,7 @@ import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { deleteUser, fetchUsers } from "../../redux/slices/data.slice";
 import theme from "../../theme";
 import { COLORS } from "../../utils/colors";
+import apiClient from "../../hooks/use-api";
 
 const useUsers = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,9 @@ const useUsers = () => {
   const [orderBy, setOrderBy] = useState("firstName");
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const updateUser = apiClient(api.USERS.update);
+  const delete_user = apiClient(api.USERS.delete);
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -26,8 +30,7 @@ const useUsers = () => {
         const newRole = currentRole === "admin" ? "user" : "admin";
         const userToUpdate = users.find((user) => user.id === userId);
         if (!userToUpdate) return;
-
-        await api.USERS.update({
+        await updateUser({
           id: userId,
           data: { ...userToUpdate, role: newRole },
         });
@@ -36,13 +39,13 @@ const useUsers = () => {
         console.error("Error updating user role:", error);
       }
     },
-    [dispatch, users]
+    [dispatch, updateUser, users]
   );
 
   const handleDeleteUser = useCallback(
     async (userId) => {
       try {
-        await api.USERS.delete({ id: userId });
+        await delete_user({ id: userId });
         dispatch(deleteUser(userId));
         dispatch(fetchUsers());
         handleMenuClose();
@@ -50,7 +53,7 @@ const useUsers = () => {
         console.error("Error deleting user:", error);
       }
     },
-    [dispatch]
+    [delete_user, dispatch]
   );
 
   const handleRequestSort = (event, property) => {

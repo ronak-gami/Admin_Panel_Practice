@@ -150,7 +150,7 @@ const Register = () => {
         </Paper>
         <Snackbar
           message={showSnack.message}
-          stateChange={showSnack.flag}
+          snackbarKey={showSnack.key}
           type={showSnack.type}
         />
       </Box>

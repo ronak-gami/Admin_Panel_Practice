@@ -16,9 +16,9 @@ const useForgotPassword = () => {
     "Please enter your email to verify your account."
   );
   const [showSnack, setShowSnack] = useState({
-    flag: false,
     message: "",
     type: "",
+    key: "",
   });
 
   const getAllUsers = apiClient(api.USERS.get_all);
@@ -45,7 +45,7 @@ const useForgotPassword = () => {
       const { data: allUsersResponse, error } = await getAllUsers();
 
       if (error) {
-        setShowSnack({ flag: true, message: error, type: "error" });
+        setShowSnack({ message: error, type: "error", key: Date.now() });
         return;
       }
 
@@ -59,15 +59,15 @@ const useForgotPassword = () => {
           setIsEmailVerified(true);
           setFeedback("Please enter your new password.");
           setShowSnack({
-            flag: true,
             message: "Your email is verified successfully",
             type: "success",
+            key: Date.now(),
           });
         } else {
           setShowSnack({
-            flag: true,
             message: "This email is not registered with us.",
             type: "error",
+            key: Date.now(),
           });
         }
       }
@@ -91,14 +91,14 @@ const useForgotPassword = () => {
       }
       if (updateUsersResponse && updateUsersResponse.data) {
         setShowSnack({
-          flag: true,
           message: "Password updated successfully!",
           type: "success",
+          key: Date.now(),
         });
         reset();
       }
     } finally {
-      setFeedback("");
+      setFeedback("Now, you can login with your new credentials.");
       setIsLoading(false);
     }
   };
