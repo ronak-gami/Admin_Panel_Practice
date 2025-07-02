@@ -59,10 +59,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const CustomDatePicker = ({ error, ...props }) => {
-  console.log("props: ", props);
+const CustomDatePicker = ({ error,label, ...props }) => 
+  {
+  console.log("props: ", props,label);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <p>{label}</p>
       <DatePicker
         sx={{ width: "100%" }}
         slotProps={{
