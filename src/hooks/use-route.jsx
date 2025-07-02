@@ -8,6 +8,7 @@ import Users from "../components/Users";
 import Tasks from "../components/Tasks";
 import ForgotPassword from "../containers/auth/forgotpassword";
 import Login from "../containers/auth/login";
+import AssignTasks from "../components/AssignTasks";
 
 const useRoutes = () => {
   const user = useSelector((state) => {
@@ -54,6 +55,13 @@ const useRoutes = () => {
         element: <Tasks />,
         isPrivate: true,
         roles: ["admin", "user"],
+      },
+      {
+        id: "assign-tasks",
+        path: URLS.ASSIGN_TASKS,
+        element: <AssignTasks />,
+        isPrivate: true,
+        roles: ["admin"],
       },
     ],
     [user?.role]

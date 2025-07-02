@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../api";
-import { taskSchema } from "../../utils/helper";
+import { priorityOptions, taskSchema } from "../../utils/helper";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { Chip, IconButton } from "@mui/material";
 import { COLORS } from "../../utils/colors";
@@ -14,6 +14,7 @@ import {
 } from "@mui/icons-material";
 import theme from "../../theme";
 import { fetchTasks, fetchUsers } from "../../redux/slices/data.slice";
+import apiClient from "../../hooks/use-api";
 
 export const useTasks = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,10 @@ export const useTasks = () => {
     priority: [],
     status: [],
   });
+
+  const createTask = apiClient(api.TASKS.create);
+  const updateTask = apiClient(api.TASKS.update);
+  const deleteTask = apiClient(api.TASKS.delete);
 
   const {
     register,
@@ -81,7 +86,7 @@ export const useTasks = () => {
 
   const handleAddTask = async (data) => {
     try {
-      await api.TASKS.create({
+      await createTask({
         data: {
           ...data,
           status: "pending",
@@ -99,13 +104,13 @@ export const useTasks = () => {
   const handleDelete = useCallback(
     async (task) => {
       try {
-        await api.TASKS.delete({ id: task.id });
+        await deleteTask({ id: task.id });
         dispatch(fetchTasks());
       } catch (error) {
         console.error("Error deleting task:", error);
       }
     },
-    [dispatch]
+    [deleteTask, dispatch]
   );
 
   const handleActions = useCallback(
@@ -113,7 +118,7 @@ export const useTasks = () => {
       try {
         const taskToUpdate = tasksFromStore.find((task) => task.id === taskId);
         if (!taskToUpdate) return;
-        await api.TASKS.update({
+        await updateTask({
           id: taskId,
           data: { ...taskToUpdate, status: newStatus },
         });
@@ -122,7 +127,7 @@ export const useTasks = () => {
         console.error("Error updating task status:", error);
       }
     },
-    [dispatch, tasksFromStore]
+    [dispatch, tasksFromStore, updateTask]
   );
 
   const handleCloseModal = () => {
@@ -293,12 +298,6 @@ export const useTasks = () => {
     }
     return baseColumns;
   }, [role, usersMap, handleMenuOpen]);
-
-  const priorityOptions = [
-    { value: "High", label: "High" },
-    { value: "Medium", label: "Medium" },
-    { value: "Low", label: "Low" },
-  ];
 
   const menuOptions = useMemo(() => {
     const options = [];

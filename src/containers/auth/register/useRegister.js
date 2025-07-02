@@ -11,9 +11,9 @@ const useRegister = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showSnack, setShowSnack] = useState({
-    flag: false,
     message: "",
     type: "",
+    key: "",
   });
   const userRegister = apiClient(api.USERS.create);
   const {
@@ -38,9 +38,9 @@ const useRegister = () => {
       });
       if (registerResponse?.data) {
         setShowSnack({
-          flag: true,
           message: "Registration Successful",
           type: "success",
+          key: Date.now(),
         });
         setTimeout(() => {
           navigate(URLS.LOGIN);

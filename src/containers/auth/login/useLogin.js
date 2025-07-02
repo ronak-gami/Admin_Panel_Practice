@@ -16,9 +16,9 @@ const useLogin = () => {
   const userLogin = apiClient(api.AUTH.login);
   const [isLoading, setIsLoading] = useState(false);
   const [showSnack, setShowSnack] = useState({
-    flag: false,
     message: "",
     type: "",
+    key: "",
   });
   const {
     register,
@@ -40,7 +40,11 @@ const useLogin = () => {
         dispatch(setToken(loginResponse?.data?.token));
         setHeaders("Authorization", `Bearer ${loginResponse?.data?.token}`);
       } else if (error) {
-        setShowSnack({ flag: true, message: error, type: "error" });
+        setShowSnack({
+          message: error,
+          type: "error",
+          key: Date.now(),
+        });
       }
     } finally {
       setIsLoading(false);

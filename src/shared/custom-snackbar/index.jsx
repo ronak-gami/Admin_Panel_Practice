@@ -4,21 +4,22 @@ import { useEffect, useState } from "react";
 const Snackbar = ({
   message,
   duration = 6000,
-  stateChange,
-  type = "success", //'success' | 'info' | 'warning' | 'error'
+  snackbarKey,
+  type = "success",
   ...props
 }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (stateChange) {
+    if (snackbarKey) {
       setOpen(true);
     }
-  }, [stateChange]);
+  }, [snackbarKey]);
 
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
     <SB
       open={open}
@@ -28,11 +29,7 @@ const Snackbar = ({
       autoHideDuration={duration}
       {...props}
     >
-      <Alert
-        onClose={handleClose}
-        severity={type}
-        variant="filled" //'standard' | 'filled' | 'outlined'
-      >
+      <Alert onClose={handleClose} severity={type} variant="filled">
         {message}
       </Alert>
     </SB>

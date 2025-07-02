@@ -21,6 +21,7 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
+  AssignmentOutlined as AssignIcon,
 } from "@mui/icons-material";
 import { COLORS } from "../utils/colors";
 import { URLS } from "../constants/urls";
@@ -29,7 +30,6 @@ import { LogoutIcon } from "../assets/icons";
 import { clearAuthData } from "../redux/slices/auth.slice";
 import CustomModal from "../shared/custom-model";
 import Button from "../shared/custom-button";
-
 const drawerWidth = 250;
 const closedDrawerWidth = 65;
 
@@ -48,6 +48,11 @@ const menuItems_Admin = [
     title: "Tasks",
     path: URLS.TASKS,
     icon: <TaskIcon />,
+  },
+  {
+    title: "Assign Tasks to Users",
+    path: URLS.ASSIGN_TASKS,
+    icon: <AssignIcon />,
   },
 ];
 
