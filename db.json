@@ -41,22 +41,6 @@
       "id": 104
     },
     {
-      "firstName": "mansi",
-      "lastName": "Diiiiii",
-      "email": "md@gmail.com",
-      "password": "Test@123",
-      "role": "user",
-      "id": 105
-    },
-    {
-      "firstName": "riddhi",
-      "lastName": "Diiii",
-      "email": "rd@gmail.com",
-      "password": "Test@123",
-      "role": "user",
-      "id": 106
-    },
-    {
       "firstName": "jeel",
       "lastName": "gosai",
       "email": "jg@gmail.com",

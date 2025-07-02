@@ -154,48 +154,6 @@ const theme = createTheme({
         elevation: 0,
       },
     },
-    MuiPickersPopper: {
-      styleOverrides: {
-        paper: {
-          borderRadius: 8,
-          boxShadow: "0px 8px 16px rgba(0,0,0,0.1)",
-        },
-      },
-    },
-    MuiPickersCalendarHeader: {
-      styleOverrides: {
-        label: {
-          fontWeight: 500,
-        },
-        switchViewIcon: {
-          color: COLORS.PRIMARY.main,
-        },
-        arrowIcon: {
-          color: COLORS.PRIMARY.main,
-        },
-      },
-    },
-    MuiPickersDay: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          "&.Mui-selected": {
-            backgroundColor: COLORS.PRIMARY.main,
-            color: COLORS.PRIMARY.contrastText,
-            "&:hover": {
-              backgroundColor: COLORS.PRIMARY.dark,
-            },
-            "&:focus": {
-              backgroundColor: COLORS.PRIMARY.main,
-            },
-          },
-        },
-        today: {
-          borderColor: COLORS.PRIMARY.main,
-          border: `1px solid ${COLORS.PRIMARY.main}`,
-        },
-      },
-    },
   },
 });
 

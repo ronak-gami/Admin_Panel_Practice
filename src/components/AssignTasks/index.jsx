@@ -18,6 +18,7 @@ const AssignTasks = () => {
     userFullNames,
     setValue,
     watch,
+    handleAssignTasks,
   } = useAssignTasks();
   return (
     <>
@@ -33,7 +34,7 @@ const AssignTasks = () => {
         >
           <Form
             id="assign-task-form"
-            onSubmit={handleSubmit(() => console.log("Form Submitted"))}
+            onSubmit={handleSubmit(handleAssignTasks)}
             noValidate
           >
             <Stack gap={2}>
