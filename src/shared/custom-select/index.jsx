@@ -15,6 +15,7 @@ const Select = ({
   options,
   label,
   error,
+  multiple = false,
   ...props
 }) => {
   const labelId = useId();
@@ -24,6 +25,7 @@ const Select = ({
       {label && <InputLabel id={labelId}>{label}</InputLabel>}
 
       <MuiSelect
+        multiple={multiple}
         displayEmpty
         onChange={(e) => {
           onChange && onChange(e);
@@ -31,7 +33,7 @@ const Select = ({
         }}
         onBlur={handleBlur}
         renderValue={(selected) => {
-          if (!selected) {
+          if (!selected || selected.length === 0) {
             return (
               <Typography
                 variant="body2"
@@ -43,7 +45,12 @@ const Select = ({
               </Typography>
             );
           }
-          return options?.find((opt) => opt?.value === selected)?.label ?? "";
+
+          return multiple
+            ? selected
+                .map((val) => options.find((opt) => opt.value === val)?.label)
+                .join(", ")
+            : (options.find((opt) => opt.value === selected)?.label ?? "");
         }}
         MenuProps={{ disableScrollLock: true }}
         {...props}
