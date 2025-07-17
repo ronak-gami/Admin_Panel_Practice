@@ -2,11 +2,10 @@ import axios from "axios";
 import { METHODS } from "../constants";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://admin-panel-lite-backend.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
 });
 
 api.interceptors.request.use(

@@ -15,7 +15,7 @@ const useRegister = () => {
     type: "",
     key: "",
   });
-  const userRegister = apiClient(api.USERS.create);
+  const userRegister = apiClient(api.AUTH.register);
   const {
     register,
     handleSubmit,
@@ -27,16 +27,18 @@ const useRegister = () => {
   const handleRegister = async (formData) => {
     setIsLoading(true);
     try {
+      const registerData = {
+        firstname: formData.firstName,
+        lastname: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        role: "user",
+      };
       const { data: registerResponse } = await userRegister({
-        data: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          role: "user",
-        },
+        data: registerData,
       });
-      if (registerResponse?.data) {
+      console.log("registerResponse: ", registerResponse?.data);
+      if (registerResponse?.data?.status === true) {
         setShowSnack({
           message: "Registration Successful",
           type: "success",
