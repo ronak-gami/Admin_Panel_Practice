@@ -74,9 +74,9 @@ const useUsers = () => {
 
   const columns = useMemo(() => {
     const baseColumns = [
-      { id: "id", label: "ID", field_name: "id" },
-      { id: "firstName", label: "First Name", field_name: "firstName" },
-      { id: "lastName", label: "Last Name", field_name: "lastName" },
+      // { id: "id", label: "ID", field_name: "id" },
+      { id: "firstname", label: "First Name", field_name: "firstname" },
+      { id: "lastname", label: "Last Name", field_name: "lastname" },
       { id: "email", label: "Email", field_name: "email" },
       { id: "role", label: "Role", field_name: "role" },
     ];

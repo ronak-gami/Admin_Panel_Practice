@@ -15,7 +15,7 @@ export const fetchUsers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.USERS.get_all();
-      return response.data;
+      return response?.data?.users;
     } catch (error) {
       return rejectWithValue(error.message || "An unknown error occurred");
     }

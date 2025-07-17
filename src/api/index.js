@@ -20,8 +20,8 @@ export const api = {
   },
   AUTH: {
     login: ({ data }) =>
-      client({ method: METHODS.POST, url: "/user/login", data }),
+      client({ method: METHODS.POST, url: "/users/login", data }),
     register: ({ data }) =>
-      client({ method: METHODS.POST, url: "/user/register", data }),
+      client({ method: METHODS.POST, url: "/users/register", data }),
   },
 };
